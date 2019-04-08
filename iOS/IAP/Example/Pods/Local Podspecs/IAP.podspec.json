@@ -1,0 +1,22 @@
+{
+  "name": "IAP",
+  "version": "0.1.0",
+  "summary": "A short description of IAP.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/rkarpievich-sc/IAP",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "rkarpievich-sc": "karpievich@mail.scand"
+  },
+  "source": {
+    "git": "https://github.com/rkarpievich-sc/IAP.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "IAP/Classes/**/*"
+}
