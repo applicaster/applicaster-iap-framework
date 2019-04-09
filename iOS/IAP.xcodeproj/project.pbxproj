@@ -8,12 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		A60A73DA225CC99300BD450D /* IAP.h in Headers */ = {isa = PBXBuildFile; fileRef = A60A73D8225CC99300BD450D /* IAP.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A6E201ED225CCB3800E30715 /* BillingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E201EC225CCB3800E30715 /* BillingHelper.swift */; };
+		A6E201F0225CCF9A00E30715 /* ProductsQueryResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E201EF225CCF9A00E30715 /* ProductsQueryResult.swift */; };
+		A6E201F2225CD02600E30715 /* ProductsQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E201F1225CD02600E30715 /* ProductsQuery.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		A60A73D5225CC99300BD450D /* IAP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = IAP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A60A73D8225CC99300BD450D /* IAP.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IAP.h; sourceTree = "<group>"; };
 		A60A73D9225CC99300BD450D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A6E201EC225CCB3800E30715 /* BillingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillingHelper.swift; sourceTree = "<group>"; };
+		A6E201EF225CCF9A00E30715 /* ProductsQueryResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsQueryResult.swift; sourceTree = "<group>"; };
+		A6E201F1225CD02600E30715 /* ProductsQuery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductsQuery.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,10 +52,21 @@
 		A60A73D7225CC99300BD450D /* IAP */ = {
 			isa = PBXGroup;
 			children = (
+				A6E201EC225CCB3800E30715 /* BillingHelper.swift */,
+				A6E201F1225CD02600E30715 /* ProductsQuery.swift */,
+				A6E201EE225CCF4500E30715 /* Types */,
 				A60A73D8225CC99300BD450D /* IAP.h */,
 				A60A73D9225CC99300BD450D /* Info.plist */,
 			);
 			path = IAP;
+			sourceTree = "<group>";
+		};
+		A6E201EE225CCF4500E30715 /* Types */ = {
+			isa = PBXGroup;
+			children = (
+				A6E201EF225CCF9A00E30715 /* ProductsQueryResult.swift */,
+			);
+			name = Types;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -95,6 +112,7 @@
 				TargetAttributes = {
 					A60A73D4225CC99300BD450D = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1010;
 					};
 				};
 			};
@@ -130,6 +148,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A6E201ED225CCB3800E30715 /* BillingHelper.swift in Sources */,
+				A6E201F0225CCF9A00E30715 /* ProductsQueryResult.swift in Sources */,
+				A6E201F2225CD02600E30715 /* ProductsQuery.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,6 +282,7 @@
 		A60A73DE225CC99300BD450D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -277,6 +299,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.scand.IAP;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -285,6 +308,7 @@
 		A60A73DF225CC99300BD450D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
