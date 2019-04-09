@@ -1,6 +1,0 @@
-framework module IAP {
-  umbrella header "IAP-umbrella.h"
-
-  export *
-  module * { export * }
-}

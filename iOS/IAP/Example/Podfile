@@ -1,6 +1,0 @@
-use_frameworks!
-target 'IAP_Tests' do
-  pod 'IAP', :path => '../'
-  
-  
-end
