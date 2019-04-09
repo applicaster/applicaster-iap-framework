@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import StoreKit
 
 class BillingHelper {
     
@@ -28,6 +29,10 @@ class BillingHelper {
         }
         
         productsQuery?.start()
+    }
+    
+    public func canMakePayments() -> Bool {
+        return SKPaymentQueue.canMakePayments()
     }
     
     // MARK: - Private methods
