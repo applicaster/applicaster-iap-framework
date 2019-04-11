@@ -1,9 +1,62 @@
 package com.applicaster.iap
 
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.Purchase
+import com.android.billingclient.api.SkuDetails
+
 /**
  * Callback for general billing events
  */
 interface BillingListener {
-    fun onPurchaseFailed(/*status code?*/)
-    fun onPurcaseLoaded(purchases: List<PurchaseItem>)
+
+    /**
+     * Implement this function to get list of [com.android.billingclient.api.Purchase]
+     * Will be called as a result of [BillingHelper.loadPurchases] function or
+     * as a result of succeeded purchase flow.
+     *
+     * @param purchases List of updated purchases if present
+     */
+    fun onPurchaseLoaded(purchases: List<Purchase>)
+
+    /**
+     * Implement this function to get error status code and error description if [BillingHelper.loadPurchases]
+     * function will be failed
+     *
+     * @param statusCode An error status code of purchase response [com.android.billingclient.api.BillingClient.BillingResponse]
+     * @param description A detailed error description
+     */
+    fun onPurchaseLoadingFailed(@BillingClient.BillingResponse statusCode: Int, description: String)
+
+    /**
+     * Implement this function to get list of In-app product's or subscription's details.
+     * Will be called as a result of [BillingHelper.loadSkuDetails] function.
+     *
+     * @param skuDetails In-app product's or subscription's details
+     */
+    fun onSkuDetailsLoaded(skuDetails: List<SkuDetails>)
+
+    /**
+     * Implement this function to get error status code and error description if [BillingHelper.loadSkuDetails]
+     * function will be failed
+     *
+     * @param statusCode An error status code of purchase response [com.android.billingclient.api.BillingClient.BillingResponse]
+     * @param description A detailed error description
+     */
+    fun onSkuDetailsLoadingFailed(@BillingClient.BillingResponse statusCode: Int, description: String)
+
+    /**
+     * Implement this function to get purchase token of purchased item.
+     *
+     * @param purchaseToken The purchase token that was (or was to be) consumed.
+     */
+    fun onPurchaseConsumed(purchaseToken: String)
+
+    /**
+     * Implement this function to get error status code and error description if [BillingHelper.consume]
+     * function will be failed
+     *
+     * @param statusCode An error status code of purchase response [com.android.billingclient.api.BillingClient.BillingResponse]
+     * @param description A detailed error description
+     */
+    fun onPurchaseConsumptionFailed(@BillingClient.BillingResponse statusCode: Int, description: String)
 }
