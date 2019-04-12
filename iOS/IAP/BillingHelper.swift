@@ -13,6 +13,8 @@ class BillingHelper {
     
     public static let sharedInstance = BillingHelper()
     
+    private let storeObserver = StoreObserver()
+    
     private var productsQuery: ProductsQuery?
     
     private init() {
@@ -33,6 +35,13 @@ class BillingHelper {
     
     public func canMakePayments() -> Bool {
         return SKPaymentQueue.canMakePayments()
+    }
+    
+    public func purchase(_ item: SKProduct, amount: Int = 1, atomic: Bool = true, completion: @escaping (PurchaseResult) -> Void) {
+        let purchase = Purchase(item: item,
+                                amount: amount,
+                                atomic: atomic)
+        storeObserver.buy(purchase, completion: completion)
     }
     
     // MARK: - Private methods
