@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.util.Log
 import com.android.billingclient.api.*
+import com.applicaster.iap.security.Security
 
 /**
  * Main class for communication between billing library and app code
@@ -58,6 +59,12 @@ object GoogleBillingHelper : BillingHelper {
 
     override fun consume(purchaseItem: Purchase) {
         executeFlow { consumeAsync(purchaseItem.purchaseToken) }
+    }
+
+    override fun validatePurchases(appPublicKey: String, purchases: List<Purchase>): List<Purchase> {
+        return purchases.filter {
+            appPublicKey.isNotEmpty() && Security.verifyPurchase(appPublicKey, it.originalJson, it.purchaseToken)
+        }
     }
 
     // Check connection status and run function passed to this function

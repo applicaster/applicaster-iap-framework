@@ -49,4 +49,12 @@ interface BillingHelper {
      * @param purchaseItem Item that represents in-app billing purchase.
      */
     fun consume(purchaseItem: Purchase)
+
+    /**
+     * Validates purchases locally on the device
+     *
+     * @param appPublicKey Public key associated with the developer account
+     * @param purchases List of purchases
+     */
+    fun validatePurchases(appPublicKey: String, purchases: List<Purchase>): List<Purchase>
 }
