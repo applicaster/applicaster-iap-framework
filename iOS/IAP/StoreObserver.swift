@@ -12,8 +12,11 @@ import StoreKit
 class StoreObserver: NSObject, SKPaymentTransactionObserver {
     
     typealias PurchaseCompletion = (PurchaseResult) -> Void
+    typealias RestoreCompletion = (RestoreResult) -> Void
     
     private var activePurchases: [String: (Purchase, PurchaseCompletion)] = [:]
+    private var restoredPurchases: [SKPaymentTransaction] = []
+    private var restoreCompletion: RestoreCompletion?
     
     override init() {
         super.init()
@@ -33,6 +36,11 @@ class StoreObserver: NSObject, SKPaymentTransactionObserver {
         SKPaymentQueue.default().add(payment)
         
         activePurchases[purchase.item.productIdentifier] = (purchase, completion)
+    }
+    
+    public func restore(completion: @escaping RestoreCompletion) {
+        restoreCompletion = completion
+        SKPaymentQueue.default().restoreCompletedTransactions()
     }
     
     // MARK: - Private methods
@@ -68,7 +76,7 @@ class StoreObserver: NSObject, SKPaymentTransactionObserver {
     }
     
     private func restored(transaction: SKPaymentTransaction) {
-        
+        restoredPurchases.append(transaction)
     }
     
     // MARK: - SKPaymentTransactionObserver methods
@@ -88,5 +96,16 @@ class StoreObserver: NSObject, SKPaymentTransactionObserver {
                 break
             }
         }
+    }
+    
+    func paymentQueue(_ queue: SKPaymentQueue, restoreCompletedTransactionsFailedWithError error: Error) {
+        restoreCompletion?(.failed(error))
+        restoreCompletion = nil
+    }
+    
+    func paymentQueueRestoreCompletedTransactionsFinished(_ queue: SKPaymentQueue) {
+        restoreCompletion?(.succeeded(restoredPurchases))
+        restoredPurchases.removeAll()
+        restoreCompletion = nil
     }
 }

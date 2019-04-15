@@ -44,6 +44,10 @@ class BillingHelper {
         storeObserver.buy(purchase, completion: completion)
     }
     
+    public func restore(completion: @escaping (RestoreResult) -> Void) {
+        storeObserver.restore(completion: completion)
+    }
+    
     // MARK: - Private methods
 
     
