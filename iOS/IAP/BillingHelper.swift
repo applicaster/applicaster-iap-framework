@@ -48,6 +48,15 @@ class BillingHelper {
         storeObserver.restore(completion: completion)
     }
     
+    public func localReceiptData() -> Data? {
+        guard let localReceiptURL = Bundle.main.appStoreReceiptURL else {
+            return nil
+        }
+        
+        let data = try? Data(contentsOf: localReceiptURL)
+        return data
+    }
+    
     // MARK: - Private methods
 
     
