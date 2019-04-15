@@ -16,6 +16,7 @@ class BillingHelper {
     private let storeObserver = StoreObserver()
     
     private var productsQuery: ProductsQuery?
+    private var receiptRefreshQuery: ReceiptRefreshQuery?
     
     private init() {
         
@@ -55,6 +56,17 @@ class BillingHelper {
         
         let data = try? Data(contentsOf: localReceiptURL)
         return data
+    }
+    
+    public func refreshReceipt(receiptProperties: [String: Any]? = nil,
+                               completion: @escaping (ReceiptRefreshResult) -> Void) {
+        receiptRefreshQuery = ReceiptRefreshQuery(receiptProperties: receiptProperties,
+                                                  completion: { [weak self] (result) in
+            self?.receiptRefreshQuery = nil
+            completion(result)
+        })
+        
+        receiptRefreshQuery?.start()
     }
     
     // MARK: - Private methods
