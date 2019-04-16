@@ -44,15 +44,15 @@ class BillingHelper {
         return SKPaymentQueue.canMakePayments()
     }
     
-    public func purchase(_ item: SKProduct, amount: Int = 1, atomic: Bool = true, completion: @escaping (PurchaseResult) -> Void) {
+    public func purchase(_ item: SKProduct, amount: Int = 1, finishing: Bool = true, completion: @escaping (PurchaseResult) -> Void) {
         let purchase = Purchase(item: item,
                                 amount: amount,
-                                atomic: atomic)
+                                finishing: finishing)
         storeObserver.buy(purchase, completion: completion)
     }
     
-    public func restore(completion: @escaping (RestoreResult) -> Void) {
-        storeObserver.restore(completion: completion)
+    public func restore(finishing: Bool = true, completion: @escaping (RestoreResult) -> Void) {
+        storeObserver.restore(finishing: finishing, completion: completion)
     }
     
     public func localReceiptData() -> Data? {
@@ -89,6 +89,10 @@ class BillingHelper {
     
     public func resume(_ downloads: [SKDownload]) {
         SKPaymentQueue.default().resume(downloads)
+    }
+    
+    public func finishTransactions(_ transaction: SKPaymentTransaction) {
+        SKPaymentQueue.default().finishTransaction(transaction)
     }
     
     // MARK: - Private methods

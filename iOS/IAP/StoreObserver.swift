@@ -16,8 +16,10 @@ class StoreObserver: NSObject, SKPaymentTransactionObserver {
     typealias DownloadsCompletion = ([SKDownload]) -> Void
     
     private var activePurchases: [String: (Purchase, PurchaseCompletion)] = [:]
+    
     private var restoredPurchases: [SKPaymentTransaction] = []
     private var restoreCompletion: RestoreCompletion?
+    private var finishing: Bool = true
     
     public var downloadsCompletion: DownloadsCompletion?
     
@@ -41,8 +43,9 @@ class StoreObserver: NSObject, SKPaymentTransactionObserver {
         activePurchases[purchase.item.productIdentifier] = (purchase, completion)
     }
     
-    public func restore(completion: @escaping RestoreCompletion) {
-        restoreCompletion = completion
+    public func restore(finishing: Bool = true, completion: @escaping RestoreCompletion) {
+        self.restoreCompletion = completion
+        self.finishing = finishing
         SKPaymentQueue.default().restoreCompletedTransactions()
     }
     
@@ -58,7 +61,7 @@ class StoreObserver: NSObject, SKPaymentTransactionObserver {
         let result = PurchaseResult.succeeded(purchase, transaction)
         completion(result)
         
-        if purchase.atomic == true {
+        if purchase.finishing == true {
             SKPaymentQueue.default().finishTransaction(transaction)
         }
     }
@@ -108,6 +111,13 @@ class StoreObserver: NSObject, SKPaymentTransactionObserver {
     
     func paymentQueueRestoreCompletedTransactionsFinished(_ queue: SKPaymentQueue) {
         restoreCompletion?(.succeeded(restoredPurchases))
+
+        if finishing == true {
+            for purchase in restoredPurchases {
+                SKPaymentQueue.default().finishTransaction(purchase)
+            }
+        }
+        
         restoredPurchases.removeAll()
         restoreCompletion = nil
     }
