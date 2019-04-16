@@ -45,6 +45,14 @@ class BillingHelper {
     }
     
     public func purchase(_ item: SKProduct, amount: Int = 1, finishing: Bool = true, completion: @escaping (PurchaseResult) -> Void) {
+        guard canMakePayments() == true else {
+            let error = NSError(domain: SKErrorDomain,
+                                code: SKError.paymentNotAllowed.rawValue,
+                                userInfo: [NSLocalizedDescriptionKey: "Payments are blocked on this device"])
+            completion(.failed(error))
+            return
+        }
+        
         let purchase = Purchase(item: item,
                                 amount: amount,
                                 finishing: finishing)
