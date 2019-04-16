@@ -13,10 +13,13 @@ class StoreObserver: NSObject, SKPaymentTransactionObserver {
     
     typealias PurchaseCompletion = (PurchaseResult) -> Void
     typealias RestoreCompletion = (RestoreResult) -> Void
+    typealias DownloadsCompletion = ([SKDownload]) -> Void
     
     private var activePurchases: [String: (Purchase, PurchaseCompletion)] = [:]
     private var restoredPurchases: [SKPaymentTransaction] = []
     private var restoreCompletion: RestoreCompletion?
+    
+    public var downloadsCompletion: DownloadsCompletion?
     
     override init() {
         super.init()
@@ -107,5 +110,9 @@ class StoreObserver: NSObject, SKPaymentTransactionObserver {
         restoreCompletion?(.succeeded(restoredPurchases))
         restoredPurchases.removeAll()
         restoreCompletion = nil
+    }
+    
+    func paymentQueue(_ queue: SKPaymentQueue, updatedDownloads downloads: [SKDownload]) {
+        downloadsCompletion?(downloads)
     }
 }

@@ -18,6 +18,12 @@ class BillingHelper {
     private var productsQuery: ProductsQuery?
     private var receiptRefreshQuery: ReceiptRefreshQuery?
     
+    public var downloadsCompletion: (([SKDownload]) -> Void)? {
+        didSet {
+            storeObserver.downloadsCompletion = downloadsCompletion
+        }
+    }
+    
     private init() {
         
     }
@@ -67,6 +73,22 @@ class BillingHelper {
         })
         
         receiptRefreshQuery?.start()
+    }
+    
+    public func start(_ downloads: [SKDownload]) {
+        SKPaymentQueue.default().start(downloads)
+    }
+    
+    public func cancel(_ downloads: [SKDownload]) {
+        SKPaymentQueue.default().cancel(downloads)
+    }
+    
+    public func pause(_ downloads: [SKDownload]) {
+        SKPaymentQueue.default().pause(downloads)
+    }
+    
+    public func resume(_ downloads: [SKDownload]) {
+        SKPaymentQueue.default().resume(downloads)
     }
     
     // MARK: - Private methods
