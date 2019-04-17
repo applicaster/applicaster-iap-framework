@@ -9,7 +9,7 @@
 import Foundation
 import StoreKit
 
-class BillingHelper {
+open class BillingHelper {
     
     public static let sharedInstance = BillingHelper()
     

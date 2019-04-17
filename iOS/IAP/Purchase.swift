@@ -9,7 +9,7 @@
 import Foundation
 import StoreKit
 
-class Purchase {
+open class Purchase {
     let item: SKProduct
     let finishing: Bool
     let amount: Int

@@ -9,7 +9,7 @@
 import Foundation
 import StoreKit
 
-enum RestoreResult {
+public enum RestoreResult {
     case succeeded([SKPaymentTransaction])
     case failed(Error)
 }
