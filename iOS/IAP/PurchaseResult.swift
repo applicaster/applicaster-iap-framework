@@ -9,7 +9,7 @@
 import Foundation
 import StoreKit
 
-enum PurchaseResult {
+public enum PurchaseResult {
     case succeeded(Purchase, SKPaymentTransaction)
     case failed(Error)
 }

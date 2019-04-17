@@ -9,7 +9,7 @@
 import Foundation
 import StoreKit
 
-struct ProductsQueryResult {
+public struct ProductsQueryResult {
     public var invalidIdentifiers: [String]
     public var products: [SKProduct]
     public var error: Error?

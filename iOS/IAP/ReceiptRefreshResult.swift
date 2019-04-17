@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum ReceiptRefreshResult {
+public enum ReceiptRefreshResult {
     case succeeded
     case failed(Error)
 }
