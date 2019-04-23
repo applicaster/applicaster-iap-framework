@@ -56,5 +56,5 @@ interface BillingHelper {
      * @param appPublicKey Public key associated with the developer account
      * @param purchases List of purchases
      */
-    fun validatePurchases(appPublicKey: String, purchases: List<Purchase>): List<Purchase>
+    fun validatePurchases(appPublicKey: String, purchases: List<Purchase>)
 }

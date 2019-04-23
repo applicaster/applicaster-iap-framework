@@ -61,15 +61,22 @@ object GoogleBillingHelper : BillingHelper {
         executeFlow { consumeAsync(purchaseItem.purchaseToken) }
     }
 
-    override fun validatePurchases(appPublicKey: String, purchases: List<Purchase>): List<Purchase> {
-        return purchases.filter {
-            appPublicKey.isNotEmpty() && Security.verifyPurchase(appPublicKey, it.originalJson, it.purchaseToken)
+    override fun validatePurchases(appPublicKey: String, purchases: List<Purchase>) {
+        // we should check app public key if it not empty and return empty list if it does
+        if (appPublicKey.isEmpty()) {
+            Log.w(TAG, "App public key should be not empty!")
+            billingListener.onPurchaseLoaded(emptyList())
+        } else {
+            val validPurchases: List<Purchase> = purchases.filter {
+                Security.verifyPurchase(appPublicKey, it.originalJson, it.purchaseToken)
+            }
+            billingListener.onPurchaseLoaded(validPurchases)
         }
     }
 
-    // Check connection status and run function passed to this function
+    // Check connection status and run block passed to this function
     // If the connection wasn't established try to establish connection and
-    // execute passed function after establishing the connection
+    // execute passed block after establishing the connection
     private fun executeFlow(function: () -> Unit) {
         if (connectionStatus == ConnectionStatus.CONNECTED &&  billingClient.isReady) {
             // execute given function immediately
@@ -120,11 +127,10 @@ object GoogleBillingHelper : BillingHelper {
 
     private fun queryPurchases(@BillingClient.SkuType skuType: String) {
         val result = billingClient.queryPurchases(skuType)
-        if (result != null) {
+        //if result isn't null set to callback purchases list else set empty list
+        result?.also {
             billingListener.onPurchaseLoaded(result.purchasesList)
-        } else {
-            billingListener.onPurchaseLoaded(listOf())
-        }
+        } ?: billingListener.onPurchaseLoaded(listOf())
     }
 
     private fun querySkuDetails(skuType: String, skusList: List<String>) {

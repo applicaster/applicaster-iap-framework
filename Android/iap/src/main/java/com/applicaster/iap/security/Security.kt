@@ -37,10 +37,7 @@ class Security {
             }
 
             val key = generatePublicKey(base64PublicKey)
-            if (key != null) {
-                return verify(key, signedData, signature)
-            }
-            return false
+            return key?.let { verify(it, signedData, signature) } ?: false
         }
 
         /**

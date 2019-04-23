@@ -12,7 +12,8 @@ interface BillingListener {
     /**
      * Implement this function to get list of [com.android.billingclient.api.Purchase]
      * Will be called as a result of [BillingHelper.loadPurchases] function or
-     * as a result of succeeded purchase flow.
+     * as a result of succeeded purchase flow or as the result of [BillingHelper.validatePurchases].
+     * For [BillingHelper.validatePurchases] call this callback will be contain only verified purchases
      *
      * @param purchases List of updated purchases if present
      */
