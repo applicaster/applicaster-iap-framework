@@ -24,6 +24,12 @@ open class BillingHelper {
         }
     }
     
+    public var unfinishedTransactionCompletion: ((SKPaymentTransaction) -> Void)? {
+        didSet {
+            storeObserver.unfinishedTransactionCompletion = unfinishedTransactionCompletion
+        }
+    }
+    
     private init() {
         
     }
@@ -99,7 +105,7 @@ open class BillingHelper {
         SKPaymentQueue.default().resume(downloads)
     }
     
-    public func finishTransactions(_ transaction: SKPaymentTransaction) {
+    public func finishTransaction(_ transaction: SKPaymentTransaction) {
         SKPaymentQueue.default().finishTransaction(transaction)
     }
     

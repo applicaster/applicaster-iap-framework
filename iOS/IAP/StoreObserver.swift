@@ -22,6 +22,7 @@ class StoreObserver: NSObject, SKPaymentTransactionObserver {
     private var finishing: Bool = true
     
     public var downloadsCompletion: DownloadsCompletion?
+    public var unfinishedTransactionCompletion: ((SKPaymentTransaction) -> Void)?
     
     override init() {
         super.init()
@@ -71,6 +72,7 @@ class StoreObserver: NSObject, SKPaymentTransactionObserver {
     private func failed(transaction: SKPaymentTransaction) {
         let identifier = transaction.payment.productIdentifier
         guard let (_, completion) = activePurchases[identifier] else {
+            unfinished(transaction: transaction)
             return
         }
         activePurchases.removeValue(forKey: identifier)
@@ -84,7 +86,16 @@ class StoreObserver: NSObject, SKPaymentTransactionObserver {
     }
     
     private func restored(transaction: SKPaymentTransaction) {
-        restoredPurchases.append(transaction)
+        if restoreCompletion == nil {
+            unfinished(transaction: transaction)
+        } else {
+            restoredPurchases.append(transaction)
+        }
+    }
+    
+    private func unfinished(transaction: SKPaymentTransaction) {
+        unfinishedTransactionCompletion?(transaction)
+        SKPaymentQueue.default().finishTransaction(transaction)
     }
     
     // MARK: - SKPaymentTransactionObserver methods
