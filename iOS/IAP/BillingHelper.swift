@@ -50,7 +50,10 @@ open class BillingHelper {
         return SKPaymentQueue.canMakePayments()
     }
     
-    public func purchase(_ item: SKProduct, amount: Int = 1, finishing: Bool = true, completion: @escaping (PurchaseResult) -> Void) {
+    public func purchase(_ item: SKProduct,
+                         amount: Int = 1,
+                         finishing: Bool = true,
+                         completion: @escaping (PurchaseResult) -> Void) {
         guard canMakePayments() == true else {
             let error = NSError(domain: SKErrorDomain,
                                 code: SKError.paymentNotAllowed.rawValue,
@@ -108,8 +111,4 @@ open class BillingHelper {
     public func finishTransaction(_ transaction: SKPaymentTransaction) {
         SKPaymentQueue.default().finishTransaction(transaction)
     }
-    
-    // MARK: - Private methods
-
-    
 }

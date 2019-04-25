@@ -36,9 +36,7 @@ class ProductsQuery: NSObject, SKProductsRequestDelegate {
     func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
         let invalidIdentifiers = response.invalidProductIdentifiers
         let products = response.products
-        let result = ProductsQueryResult(invalidIdentifiers: invalidIdentifiers,
-                                         products: products,
-                                         error: nil)
+        let result = ProductsQueryResult.success((products, invalidIdentifiers))
         completion(result)
     }
     
@@ -47,10 +45,7 @@ class ProductsQuery: NSObject, SKProductsRequestDelegate {
     }
 
     func request(_ request: SKRequest, didFailWithError error: Error) {
-        let result = ProductsQueryResult(invalidIdentifiers: [],
-                                         products: [],
-                                         error: error)
+        let result = ProductsQueryResult.failure(error)
         completion(result)
     }
-    
 }

@@ -8,14 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		A60A73DA225CC99300BD450D /* IAP.h in Headers */ = {isa = PBXBuildFile; fileRef = A60A73D8225CC99300BD450D /* IAP.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		A60D499C2260F75A00C46293 /* RestoreResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60D499B2260F75A00C46293 /* RestoreResults.swift */; };
-		A610223E225F3BE700709582 /* PurchaseResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = A610223D225F3BE700709582 /* PurchaseResult.swift */; };
+		A60FC4442271FCD500C353C4 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60FC4432271FCD500C353C4 /* Result.swift */; };
 		A6102240225F3CF300709582 /* StoreObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A610223F225F3CF300709582 /* StoreObserver.swift */; };
 		A6102242225F62FC00709582 /* Purchase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6102241225F62FC00709582 /* Purchase.swift */; };
 		A6C40BD82264DF20001365ED /* ReceiptRefreshQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6C40BD72264DF20001365ED /* ReceiptRefreshQuery.swift */; };
-		A6C40BDA2264DFD3001365ED /* ReceiptRefreshResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6C40BD92264DFD3001365ED /* ReceiptRefreshResult.swift */; };
 		A6E201ED225CCB3800E30715 /* BillingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E201EC225CCB3800E30715 /* BillingHelper.swift */; };
-		A6E201F0225CCF9A00E30715 /* ProductsQueryResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E201EF225CCF9A00E30715 /* ProductsQueryResult.swift */; };
 		A6E201F2225CD02600E30715 /* ProductsQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E201F1225CD02600E30715 /* ProductsQuery.swift */; };
 /* End PBXBuildFile section */
 
@@ -23,14 +20,11 @@
 		A60A73D5225CC99300BD450D /* IAP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = IAP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A60A73D8225CC99300BD450D /* IAP.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IAP.h; sourceTree = "<group>"; };
 		A60A73D9225CC99300BD450D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A60D499B2260F75A00C46293 /* RestoreResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreResults.swift; sourceTree = "<group>"; };
-		A610223D225F3BE700709582 /* PurchaseResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseResult.swift; sourceTree = "<group>"; };
+		A60FC4432271FCD500C353C4 /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		A610223F225F3CF300709582 /* StoreObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreObserver.swift; sourceTree = "<group>"; };
 		A6102241225F62FC00709582 /* Purchase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Purchase.swift; sourceTree = "<group>"; };
 		A6C40BD72264DF20001365ED /* ReceiptRefreshQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptRefreshQuery.swift; sourceTree = "<group>"; };
-		A6C40BD92264DFD3001365ED /* ReceiptRefreshResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptRefreshResult.swift; sourceTree = "<group>"; };
 		A6E201EC225CCB3800E30715 /* BillingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillingHelper.swift; sourceTree = "<group>"; };
-		A6E201EF225CCF9A00E30715 /* ProductsQueryResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsQueryResult.swift; sourceTree = "<group>"; };
 		A6E201F1225CD02600E30715 /* ProductsQuery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductsQuery.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -66,8 +60,8 @@
 			children = (
 				A6E201EC225CCB3800E30715 /* BillingHelper.swift */,
 				A610223F225F3CF300709582 /* StoreObserver.swift */,
-				A6E201F1225CD02600E30715 /* ProductsQuery.swift */,
-				A6C40BD72264DF20001365ED /* ReceiptRefreshQuery.swift */,
+				A6102241225F62FC00709582 /* Purchase.swift */,
+				A60FC4422271F91900C353C4 /* Queries */,
 				A6E201EE225CCF4500E30715 /* Types */,
 				A60A73D8225CC99300BD450D /* IAP.h */,
 				A60A73D9225CC99300BD450D /* Info.plist */,
@@ -75,14 +69,19 @@
 			path = IAP;
 			sourceTree = "<group>";
 		};
+		A60FC4422271F91900C353C4 /* Queries */ = {
+			isa = PBXGroup;
+			children = (
+				A6E201F1225CD02600E30715 /* ProductsQuery.swift */,
+				A6C40BD72264DF20001365ED /* ReceiptRefreshQuery.swift */,
+			);
+			name = Queries;
+			sourceTree = "<group>";
+		};
 		A6E201EE225CCF4500E30715 /* Types */ = {
 			isa = PBXGroup;
 			children = (
-				A6E201EF225CCF9A00E30715 /* ProductsQueryResult.swift */,
-				A610223D225F3BE700709582 /* PurchaseResult.swift */,
-				A6102241225F62FC00709582 /* Purchase.swift */,
-				A60D499B2260F75A00C46293 /* RestoreResults.swift */,
-				A6C40BD92264DFD3001365ED /* ReceiptRefreshResult.swift */,
+				A60FC4432271FCD500C353C4 /* Result.swift */,
 			);
 			name = Types;
 			sourceTree = "<group>";
@@ -168,12 +167,9 @@
 			files = (
 				A6E201ED225CCB3800E30715 /* BillingHelper.swift in Sources */,
 				A6102240225F3CF300709582 /* StoreObserver.swift in Sources */,
-				A6C40BDA2264DFD3001365ED /* ReceiptRefreshResult.swift in Sources */,
-				A610223E225F3BE700709582 /* PurchaseResult.swift in Sources */,
-				A60D499C2260F75A00C46293 /* RestoreResults.swift in Sources */,
 				A6102242225F62FC00709582 /* Purchase.swift in Sources */,
+				A60FC4442271FCD500C353C4 /* Result.swift in Sources */,
 				A6C40BD82264DF20001365ED /* ReceiptRefreshQuery.swift in Sources */,
-				A6E201F0225CCF9A00E30715 /* ProductsQueryResult.swift in Sources */,
 				A6E201F2225CD02600E30715 /* ProductsQuery.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
