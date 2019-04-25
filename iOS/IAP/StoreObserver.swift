@@ -58,7 +58,9 @@ class StoreObserver: NSObject, SKPaymentTransactionObserver {
         }
         activePurchases.removeValue(forKey: identifier)
         
-        let result = PurchaseResult.succeeded(purchase, transaction)
+        purchase.transaction = transaction
+        
+        let result = PurchaseResult.success(purchase)
         completion(result)
         
         if purchase.finishing == true {
@@ -77,7 +79,7 @@ class StoreObserver: NSObject, SKPaymentTransactionObserver {
             return
         }
         
-        let result = PurchaseResult.failed(error)
+        let result = PurchaseResult.failure(error)
         completion(result)
     }
     
@@ -105,12 +107,12 @@ class StoreObserver: NSObject, SKPaymentTransactionObserver {
     }
     
     func paymentQueue(_ queue: SKPaymentQueue, restoreCompletedTransactionsFailedWithError error: Error) {
-        restoreCompletion?(.failed(error))
+        restoreCompletion?(.failure(error))
         restoreCompletion = nil
     }
     
     func paymentQueueRestoreCompletedTransactionsFinished(_ queue: SKPaymentQueue) {
-        restoreCompletion?(.succeeded(restoredPurchases))
+        restoreCompletion?(.success(restoredPurchases))
 
         if finishing == true {
             for purchase in restoredPurchases {

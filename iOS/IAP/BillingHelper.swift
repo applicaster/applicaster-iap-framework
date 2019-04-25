@@ -49,7 +49,7 @@ open class BillingHelper {
             let error = NSError(domain: SKErrorDomain,
                                 code: SKError.paymentNotAllowed.rawValue,
                                 userInfo: [NSLocalizedDescriptionKey: "Payments are blocked on this device"])
-            completion(.failed(error))
+            completion(.failure(error))
             return
         }
         

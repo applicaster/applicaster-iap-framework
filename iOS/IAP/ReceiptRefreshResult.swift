@@ -9,6 +9,6 @@
 import Foundation
 
 public enum ReceiptRefreshResult {
-    case succeeded
-    case failed(Error)
+    case success
+    case failure(Error)
 }

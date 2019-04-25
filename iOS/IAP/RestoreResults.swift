@@ -10,6 +10,6 @@ import Foundation
 import StoreKit
 
 public enum RestoreResult {
-    case succeeded([SKPaymentTransaction])
-    case failed(Error)
+    case success([SKPaymentTransaction])
+    case failure(Error)
 }

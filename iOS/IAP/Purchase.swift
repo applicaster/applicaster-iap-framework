@@ -13,6 +13,7 @@ open class Purchase {
     let item: SKProduct
     let finishing: Bool
     let amount: Int
+    var transaction: SKPaymentTransaction?
     
     init(item: SKProduct,
          amount: Int = 1,

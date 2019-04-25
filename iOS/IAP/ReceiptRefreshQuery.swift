@@ -32,10 +32,10 @@ class ReceiptRefreshQuery: NSObject, SKRequestDelegate {
     // MARK: - SKRequestDelegate methods
     
     func requestDidFinish(_ request: SKRequest) {
-        completion(.succeeded)
+        completion(.success)
     }
     
     func request(_ request: SKRequest, didFailWithError error: Error) {
-        completion(.failed(error))
+        completion(.failure(error))
     }
 }
