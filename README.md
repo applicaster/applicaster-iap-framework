@@ -13,6 +13,7 @@ This repository contains the code for the IAP SDK (Android, iOS)
 * `GoogleBillingHelper.purchase()`
 * `GoogleBillingHelper.loadpurchses()`
 * `GoogleBillingHelper.consume()`
+
 Detailed information on how to use framework API you can read in [Wiki](https://github.com/applicaster/applicaster-iap-framework/wiki).
 
 ### iOS
