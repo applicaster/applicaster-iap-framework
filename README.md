@@ -1,6 +1,16 @@
 # applicaster-iap-framework
 
-This repository contains the code for the IAP SDK (Android, iOS)
+This repository contains the code for the In-App Purchase framework for Android and iOS.
+
+The In App Purchase framework is a mini sdk that provides all the necessary methods to communicate with the Apple App Store / Google Play store and to integrate in-app purchase flows into a mobile app.
+
+The framework supports all types of products - Consumable, Non-Consumable, and Subscriptions.
+
+The Android implementation of the framework is based on Google Play Billing Library 1.2.2 Release:
+https://developer.android.com/google/play/billing/billing_library_releases_notes.html#release-1_2_2
+
+The iOS Implementation of the framework is based of Apple's storekit in-app purchase library: https://developer.apple.com/documentation/storekit/in-app_purchase
+
 
 ## Getting Started
 
