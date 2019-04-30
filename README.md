@@ -31,12 +31,12 @@ Detailed information on how to use framework API you can read in [Wiki](https://
 #### Installation
 
 Add framework to `Podfile`:  
-`pod 'IAP', :source => 'https://github.com/applicaster/applicaster-iap-framework'`  
+`pod 'ApplicasterIAP', :source => 'https://github.com/applicaster/applicaster-iap-framework'`  
 Then run `pod install`
 
 #### Usage
 
-Import framework with `import IAP` inside `.swift` file.  
+Import framework with `import ApplicasterIAP` inside `.swift` file.  
 About framework API you can read in [Wiki](https://github.com/applicaster/applicaster-iap-framework/wiki
 )
 
