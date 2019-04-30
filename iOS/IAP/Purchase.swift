@@ -10,10 +10,10 @@ import Foundation
 import StoreKit
 
 open class Purchase {
-    let item: SKProduct
-    let finishing: Bool
-    let amount: Int
-    var transaction: SKPaymentTransaction?
+    public let item: SKProduct
+    public let finishing: Bool
+    public let amount: Int
+    public var transaction: SKPaymentTransaction?
     
     init(item: SKProduct,
          amount: Int = 1,
