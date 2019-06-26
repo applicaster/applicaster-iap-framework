@@ -37,13 +37,18 @@ Then run `pod install`
 #### Usage
 
 Import framework with `import ApplicasterIAP` inside `.swift` file.  
-About framework API you can read in [Wiki](https://github.com/applicaster/applicaster-iap-framework/wiki
-)
+About framework API you can read in [Wiki](https://github.com/applicaster/applicaster-iap-framework/wiki)
 
 ## Related Links
 
 Google Billing documentation: https://developer.android.com/google/play/billing/billing_overview
 
+The iOS Implementation of the framework is based of Apple's storekit in-app purchase library: https://developer.apple.com/documentation/storekit/in-app_purchase
+
 ## Submit an Issue
 
+For submitting issues and bug reports, please use the following link: https://github.com/applicaster/applicaster-iap-framework/issues/new/choose
+
 ## Code of Conduct
+
+Please make sure to follow our code of conduct: https://developer.applicaster.com/Code-Of-Conduct.html
