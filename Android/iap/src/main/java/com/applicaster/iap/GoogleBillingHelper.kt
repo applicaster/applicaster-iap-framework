@@ -62,7 +62,7 @@ object GoogleBillingHelper : BillingHelper {
     }
 
     override fun validatePurchases(appPublicKey: String, purchases: List<Purchase>) {
-        // we should check app public key if it not empty and return empty list if it does
+        // we should check app public key if it's not empty and return empty list if it does
         if (appPublicKey.isEmpty()) {
             Log.w(TAG, "App public key should be not empty!")
             billingListener.onPurchaseLoaded(emptyList())
@@ -129,8 +129,8 @@ object GoogleBillingHelper : BillingHelper {
         val result = billingClient.queryPurchases(skuType)
         //if result isn't null set to callback purchases list else set empty list
         result?.also {
-            billingListener.onPurchaseLoaded(result.purchasesList)
-        } ?: billingListener.onPurchaseLoaded(listOf())
+            billingListener.onPurchasesRestored(it.purchasesList)
+        } ?: billingListener.onPurchasesRestored(listOf())
     }
 
     private fun querySkuDetails(skuType: String, skusList: List<String>) {
