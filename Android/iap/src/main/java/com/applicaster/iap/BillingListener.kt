@@ -29,6 +29,13 @@ interface BillingListener {
     fun onPurchaseLoadingFailed(@BillingClient.BillingResponse statusCode: Int, description: String)
 
     /**
+     * Implement this function to get restored purchases.
+     *
+     * @param purchases List of purchased items.
+     */
+    fun onPurchasesRestored(purchases: List<Purchase>)
+
+    /**
      * Implement this function to get list of In-app product's or subscription's details.
      * Will be called as a result of [BillingHelper.loadSkuDetails] function.
      *
