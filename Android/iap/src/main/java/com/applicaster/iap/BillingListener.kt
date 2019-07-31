@@ -11,7 +11,7 @@ interface BillingListener {
 
     /**
      * Implement this function to get list of [com.android.billingclient.api.Purchase]
-     * Will be called as a result of [BillingHelper.loadPurchases] function or
+     * Will be called as a result of [BillingHelper.restorePurchases] function or
      * as a result of succeeded purchase flow or as the result of [BillingHelper.validatePurchases].
      * For [BillingHelper.validatePurchases] call this callback will be contain only verified purchases
      *
@@ -20,7 +20,7 @@ interface BillingListener {
     fun onPurchaseLoaded(purchases: List<Purchase>)
 
     /**
-     * Implement this function to get error status code and error description if [BillingHelper.loadPurchases]
+     * Implement this function to get error status code and error description if [BillingHelper.restorePurchases]
      * function will be failed
      *
      * @param statusCode An error status code of purchase response [com.android.billingclient.api.BillingClient.BillingResponse]

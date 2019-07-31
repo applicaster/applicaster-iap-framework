@@ -31,6 +31,9 @@ object GoogleBillingHelper : BillingHelper {
     private lateinit var billingListener: BillingListener
     private lateinit var billingClient: BillingClient
 
+    private var isMultitypeQueryInProgress: Boolean = false
+    private val cachedSkuDetails = arrayListOf<SkuDetails>()
+
     override fun init(applicationContext: Context, callback: BillingListener) {
         billingListener = callback
 
@@ -53,8 +56,47 @@ object GoogleBillingHelper : BillingHelper {
         executeFlow { querySkuDetails(skuType, skusList) }
     }
 
-    override fun loadPurchases(@BillingClient.SkuType skuType: String) {
-        executeFlow { queryPurchases(skuType) }
+    override fun loadSkuDetailsForAllTypes(skus: Map<String, String>) {
+        // filter items by SkuType
+        val inapps = skus.filterValues {
+                skuType -> skuType == BillingClient.SkuType.INAPP
+        }.map { it.key }
+
+        val subs = skus.filterValues {
+                skuType -> skuType == BillingClient.SkuType.SUBS
+        }.map { it.key }
+
+        //clear cached sku details before querySkuDetails call
+        cachedSkuDetails.clear()
+
+        // execute flow depends on filtered items by SkuType
+        executeFlow {
+            when {
+                subs.isNotEmpty() && inapps.isEmpty() -> {
+                    querySkuDetails(BillingClient.SkuType.SUBS, subs)
+                }
+
+                subs.isEmpty() && inapps.isNotEmpty() -> {
+                    querySkuDetails(BillingClient.SkuType.INAPP, inapps)
+                }
+
+                subs.isNotEmpty() && inapps.isNotEmpty() -> {
+                    isMultitypeQueryInProgress = true
+                    querySkuDetails(BillingClient.SkuType.SUBS, subs)
+                    querySkuDetails(BillingClient.SkuType.INAPP, inapps)
+                }
+            }
+        }
+    }
+
+    override fun restorePurchases(@BillingClient.SkuType skuType: String) {
+        executeFlow { billingListener.onPurchasesRestored(queryPurchases(skuType)) }
+    }
+
+    override fun restorePurchasesForAllTypes() {
+        val restoredSubscriptions: List<Purchase> = queryPurchases(BillingClient.SkuType.SUBS)
+        val restoredInapps: List<Purchase> = queryPurchases(BillingClient.SkuType.INAPP)
+        billingListener.onPurchasesRestored( restoredSubscriptions + restoredInapps)
     }
 
     override fun consume(purchaseItem: Purchase) {
@@ -78,7 +120,7 @@ object GoogleBillingHelper : BillingHelper {
     // If the connection wasn't established try to establish connection and
     // execute passed block after establishing the connection
     private fun executeFlow(function: () -> Unit) {
-        if (connectionStatus == ConnectionStatus.CONNECTED &&  billingClient.isReady) {
+        if (connectionStatus == ConnectionStatus.CONNECTED && billingClient.isReady) {
             // execute given function immediately
             function()
         } else {
@@ -94,7 +136,10 @@ object GoogleBillingHelper : BillingHelper {
                 billingListener.onPurchaseLoaded(purchases ?: arrayListOf())
             }
             else -> {
-                billingListener.onPurchaseLoadingFailed(responseCode, handleErrorResult(responseCode))
+                billingListener.onPurchaseLoadingFailed(
+                    responseCode,
+                    handleErrorResult(responseCode)
+                )
             }
         }
     }
@@ -125,12 +170,10 @@ object GoogleBillingHelper : BillingHelper {
         })
     }
 
-    private fun queryPurchases(@BillingClient.SkuType skuType: String) {
+    private fun queryPurchases(@BillingClient.SkuType skuType: String): List<Purchase> {
         val result = billingClient.queryPurchases(skuType)
         //if result isn't null set to callback purchases list else set empty list
-        result?.also {
-            billingListener.onPurchasesRestored(it.purchasesList)
-        } ?: billingListener.onPurchasesRestored(listOf())
+        return result?.purchasesList ?: listOf()
     }
 
     private fun querySkuDetails(skuType: String, skusList: List<String>) {
@@ -144,10 +187,19 @@ object GoogleBillingHelper : BillingHelper {
         billingClient.querySkuDetailsAsync(skuDetailsParams) { responseCode, skuDetailsList ->
             when (responseCode) {
                 BillingClient.BillingResponse.OK -> {
-                    //call callback function with result
-                    billingListener.onSkuDetailsLoaded(skuDetailsList)
+                    //call callback function with result depends on billing flow state
+                    if (isMultitypeQueryInProgress) {
+                        // save obtained items to the cache and set billing flow to finished(isMultitypeQueryInProgress = true)
+                        cachedSkuDetails.addAll(skuDetailsList)
+                        isMultitypeQueryInProgress = false
+                    } else {
+                        billingListener.onSkuDetailsLoaded(cachedSkuDetails + skuDetailsList)
+                        cachedSkuDetails.clear()
+                    }
                 }
                 else -> {
+                    isMultitypeQueryInProgress = false
+                    cachedSkuDetails.clear()
                     billingListener.onSkuDetailsLoadingFailed(responseCode, handleErrorResult(responseCode))
                 }
             }
@@ -169,7 +221,10 @@ object GoogleBillingHelper : BillingHelper {
                     billingListener.onPurchaseConsumed(outToken)
                 }
                 else -> {
-                    billingListener.onPurchaseConsumptionFailed(responseCode, handleErrorResult(responseCode))
+                    billingListener.onPurchaseConsumptionFailed(
+                        responseCode,
+                        handleErrorResult(responseCode)
+                    )
                 }
             }
         }
