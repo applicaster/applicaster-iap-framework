@@ -42,12 +42,12 @@ interface BillingHelper {
      *
      * @param skuType A type of the SKU: in-app or subscription
      */
-    fun loadPurchases(@BillingClient.SkuType skuType: String)
+    fun restorePurchases(@BillingClient.SkuType skuType: String)
 
     /**
      * Get purchases details for all the items (for both SkuTypes) bought within app.
      */
-    fun loadPurchasesForAllTypes()
+    fun restorePurchasesForAllTypes()
 
     /**
      * Initiate the billing flow for an in-app purchase or subscription.

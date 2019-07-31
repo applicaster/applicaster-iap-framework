@@ -31,7 +31,7 @@ object GoogleBillingHelper : BillingHelper {
     private lateinit var billingListener: BillingListener
     private lateinit var billingClient: BillingClient
 
-    private var isBillingFlowFinished: Boolean = true
+    private var isMultitypeQueryInProgress: Boolean = false
     private val cachedSkuDetails = arrayListOf<SkuDetails>()
 
     override fun init(applicationContext: Context, callback: BillingListener) {
@@ -81,7 +81,7 @@ object GoogleBillingHelper : BillingHelper {
                 }
 
                 subs.isNotEmpty() && inapps.isNotEmpty() -> {
-                    isBillingFlowFinished = false
+                    isMultitypeQueryInProgress = true
                     querySkuDetails(BillingClient.SkuType.SUBS, subs)
                     querySkuDetails(BillingClient.SkuType.INAPP, inapps)
                 }
@@ -89,11 +89,11 @@ object GoogleBillingHelper : BillingHelper {
         }
     }
 
-    override fun loadPurchases(@BillingClient.SkuType skuType: String) {
+    override fun restorePurchases(@BillingClient.SkuType skuType: String) {
         executeFlow { billingListener.onPurchasesRestored(queryPurchases(skuType)) }
     }
 
-    override fun loadPurchasesForAllTypes() {
+    override fun restorePurchasesForAllTypes() {
         val restoredSubscriptions: List<Purchase> = queryPurchases(BillingClient.SkuType.SUBS)
         val restoredInapps: List<Purchase> = queryPurchases(BillingClient.SkuType.INAPP)
         billingListener.onPurchasesRestored( restoredSubscriptions + restoredInapps)
@@ -188,17 +188,17 @@ object GoogleBillingHelper : BillingHelper {
             when (responseCode) {
                 BillingClient.BillingResponse.OK -> {
                     //call callback function with result depends on billing flow state
-                    if (!isBillingFlowFinished) {
-                        // save obtained items to the cache and set billing flow to finished(isBillingFlowFinished = true)
+                    if (isMultitypeQueryInProgress) {
+                        // save obtained items to the cache and set billing flow to finished(isMultitypeQueryInProgress = true)
                         cachedSkuDetails.addAll(skuDetailsList)
-                        isBillingFlowFinished = true
+                        isMultitypeQueryInProgress = false
                     } else {
                         billingListener.onSkuDetailsLoaded(cachedSkuDetails + skuDetailsList)
                         cachedSkuDetails.clear()
                     }
                 }
                 else -> {
-                    isBillingFlowFinished = true
+                    isMultitypeQueryInProgress = false
                     cachedSkuDetails.clear()
                     billingListener.onSkuDetailsLoadingFailed(responseCode, handleErrorResult(responseCode))
                 }
