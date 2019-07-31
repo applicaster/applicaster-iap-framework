@@ -29,11 +29,25 @@ interface BillingHelper {
     fun loadSkuDetails(@BillingClient.SkuType skuType: String, skusList: List<String>)
 
     /**
-     * Get purchases details for all the items bought within app.
+     * Loads list of SkuDetails for both SkuTypes at the same time
+     * and calls [BillingListener.onSkuDetailsLoaded] or [BillingListener.onSkuDetailsLoadingFailed]
+     * if operation was failed
+     *
+     * @param skus A map of sku IDs as key and [BillingClient.SkuType]
+     */
+    fun loadSkuDetailsForAllTypes(skus: Map<String, String>)
+
+    /**
+     * Get purchases details for all the items of current SkuType bought within app.
      *
      * @param skuType A type of the SKU: in-app or subscription
      */
     fun loadPurchases(@BillingClient.SkuType skuType: String)
+
+    /**
+     * Get purchases details for all the items (for both SkuTypes) bought within app.
+     */
+    fun loadPurchasesForAllTypes()
 
     /**
      * Initiate the billing flow for an in-app purchase or subscription.
