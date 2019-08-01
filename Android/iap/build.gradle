@@ -66,14 +66,24 @@ def getVersionName = { ->
     try {
         def stdout = new ByteArrayOutputStream()
         exec {
-            commandLine 'git', 'describe', '--abbrev=0', '--tags'
+            commandLine 'git', 'describe', '--match', 'android-*', '--abbrev=0', '--tags'
             standardOutput = stdout
         }
-        return stdout.toString().trim()
+        def tag = stdout.toString().trim()
+        String[] arr = tag.split('-')
+        if (arr.length > 1) {
+            return arr[1]
+        }
+        return arr[0]
     }
     catch (ignored) {
+        println 'catch'
         return null
     }
+}
+
+def compareVersions = { versionFromTag, versionFromProps ->
+    return versionFromTag == versionFromProps
 }
 
 publishing {
@@ -84,6 +94,10 @@ publishing {
             def versionFromTag = getVersionName()
             if (versionFromTag != null) {
                 // There is a tag existing on the current commit - we can upload to Bintray
+
+                if (!compareVersions(versionFromTag, VERSION))
+                    throw new Exception("Incomparable version value from tag and properties!")
+
                 version versionFromTag
 
                 artifactId ARTIFACT_ID
@@ -165,7 +179,7 @@ bintray {
     publish = true
     override = true
     pkg {
-        repo = 'maven'
+        repo = 'maven_plugins'
         name = ARTIFACT_ID
         userOrg = 'applicaster-ltd'
         websiteUrl = POM_URL
