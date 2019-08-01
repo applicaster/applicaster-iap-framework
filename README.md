@@ -20,8 +20,10 @@ The iOS Implementation of the framework is based of Apple's storekit in-app purc
 * To setup billing and launch billing flow you must implement `BillingListener` and define all callbacks
 * You must call `GoogleBillingHelper.init()` and pass your `BillingListener` implementation and Context before other SDK calls
 * `GoogleBillingHelper.loadSkuDetails()`
+* `GoogleBillingHelper.loadSkuDetailsForAllTypes()`
 * `GoogleBillingHelper.purchase()`
-* `GoogleBillingHelper.loadpurchses()`
+* `GoogleBillingHelper.restorePurchses()`
+* `GoogleBillingHelper.restorePurchasesForAllTypes()`
 * `GoogleBillingHelper.consume()`
 
 Detailed information on how to use framework API you can read in [Wiki](https://github.com/applicaster/applicaster-iap-framework/wiki).
