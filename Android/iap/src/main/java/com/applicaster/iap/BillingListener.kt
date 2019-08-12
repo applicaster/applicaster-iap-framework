@@ -67,4 +67,13 @@ interface BillingListener {
      * @param description A detailed error description
      */
     fun onPurchaseConsumptionFailed(@BillingClient.BillingResponse statusCode: Int, description: String)
+
+    /**
+     * Implement this function to obtain error status code and error description if BillingClient sent
+     * an initialization error.
+     *
+     * @param statusCode An error status code of purchase response [com.android.billingclient.api.BillingClient.BillingResponse]
+     * @param description A detailed error description
+     */
+    fun onBillingClientError(@BillingClient.BillingResponse statusCode: Int, description: String)
 }

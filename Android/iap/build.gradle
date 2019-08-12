@@ -45,6 +45,7 @@ repositories {
 //---------------------------------- Bintray ----------------------------------//
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
+apply plugin: 'org.jetbrains.dokka-android'
 
 buildscript {
     repositories {
@@ -54,7 +55,8 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
-        classpath 'com.github.dcendents:android-maven-plugin:1.2'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
+        classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:0.9.17"
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
     }
 }
@@ -93,16 +95,16 @@ publishing {
 
             def versionFromTag = getVersionName()
             if (versionFromTag != null) {
-                // There is a tag existing on the current commit - we can upload to Bintray
-
+                // Check if version from tag equals to version from properties
                 if (!compareVersions(versionFromTag, VERSION))
                     throw new Exception("Incomparable version value from tag and properties!")
 
+                // There is a tag existing on the current commit - we can upload to Bintray
                 version versionFromTag
 
                 artifactId ARTIFACT_ID
                 artifact ("build/outputs/aar/${project.getName()}-release.aar") {
-                    builtBy assembleRelease
+                    builtBy assemble
                 }
                 artifact androidJavadocsJar
                 artifact androidSourcesJar
@@ -162,11 +164,11 @@ publishing {
     }
 }
 
-def getBintrayUserProperty() {
+static def getBintrayUserProperty() {
     return System.getenv("BINTRAY_USER")
 }
 
-def getBintrayApiKeyProperty() {
+static def getBintrayApiKeyProperty() {
     return System.getenv("BINTRAY_API_KEY")
 }
 
@@ -194,15 +196,15 @@ bintray {
     }
 }
 
-task androidJavadocs(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    failOnError false
+dokka {
+    outputFormat = 'javadoc'
+    outputDirectory = "$buildDir/javadoc"
+    reportUndocumented = false
 }
 
-task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+task androidJavadocsJar(type: Jar, dependsOn: dokka) {
     classifier = 'javadoc'
-    from androidJavadocs.destinationDir
+    from "$buildDir/javadoc"
 }
 
 task androidSourcesJar(type: Jar) {
