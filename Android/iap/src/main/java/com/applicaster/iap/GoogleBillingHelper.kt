@@ -26,6 +26,7 @@ object GoogleBillingHelper : BillingHelper {
     private const val SERVICE_TIMEOUT_DESC = "The request has reached the maximum timeout before Google Play responds"
     private const val SERVICE_UNAVAILABLE_DESC = "Error occurs in relation to the devices network connectivity"
     private const val UNDEFINED_ERROR_DESC = "Undefined error"
+    private const val BLLING_SERVICE_CONNECTION_WAS_LOST = "Billing service connection was lost"
 
     private var connectionStatus: ConnectionStatus = ConnectionStatus.DISCONNECTED
     private lateinit var billingListener: BillingListener
@@ -151,6 +152,10 @@ object GoogleBillingHelper : BillingHelper {
             override fun onBillingServiceDisconnected() {
                 Log.w(TAG, "Billing service disconnected")
                 connectionStatus = ConnectionStatus.DISCONNECTED
+                billingListener.onBillingClientError(
+                    BillingClient.BillingResponse.SERVICE_DISCONNECTED,
+                    BLLING_SERVICE_CONNECTION_WAS_LOST
+                )
             }
 
             override fun onBillingSetupFinished(@BillingClient.BillingResponse responseCode: Int) {
@@ -163,7 +168,7 @@ object GoogleBillingHelper : BillingHelper {
                     }
                     else -> {
                         connectionStatus = ConnectionStatus.DISCONNECTED
-                        handleErrorResult(responseCode)
+                        billingListener.onBillingClientError(responseCode, handleErrorResult(responseCode))
                     }
                 }
             }
