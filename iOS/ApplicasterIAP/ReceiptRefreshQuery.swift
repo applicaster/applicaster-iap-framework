@@ -19,6 +19,8 @@ class ReceiptRefreshQuery: NSObject, SKRequestDelegate {
         self.request = SKReceiptRefreshRequest(receiptProperties: receiptProperties)
         self.completion = completion
         super.init()
+        
+        self.request.delegate = self
     }
     
     public func start() {
