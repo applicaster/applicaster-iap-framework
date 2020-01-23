@@ -40,7 +40,9 @@ open class BillingHelper {
                          completion: @escaping (ProductsQueryResult) -> Void) {
         productsQuery = ProductsQuery(identifiers: identifiers) { [weak self] (result) in
             self?.productsQuery = nil
-            completion(result)
+            DispatchQueue.main.async {
+                completion(result)
+            }
         }
         
         productsQuery?.start()
@@ -58,7 +60,9 @@ open class BillingHelper {
             let error = NSError(domain: SKErrorDomain,
                                 code: SKError.paymentNotAllowed.rawValue,
                                 userInfo: [NSLocalizedDescriptionKey: "Payments are blocked on this device"])
-            completion(.failure(error))
+            DispatchQueue.main.async {
+                completion(.failure(error))
+            }
             return
         }
         
@@ -86,7 +90,9 @@ open class BillingHelper {
         receiptRefreshQuery = ReceiptRefreshQuery(receiptProperties: receiptProperties,
                                                   completion: { [weak self] (result) in
             self?.receiptRefreshQuery = nil
-            completion(result)
+            DispatchQueue.main.async {
+                completion(result)
+            }
         })
         
         receiptRefreshQuery?.start()

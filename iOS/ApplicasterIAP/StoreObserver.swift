@@ -62,7 +62,9 @@ class StoreObserver: NSObject, SKPaymentTransactionObserver {
         purchase.transaction = transaction
         
         let result = PurchaseResult.success(purchase)
-        completion(result)
+        DispatchQueue.main.async {
+            completion(result)
+        }
         
         if purchase.finishing == true {
             SKPaymentQueue.default().finishTransaction(transaction)
@@ -82,7 +84,9 @@ class StoreObserver: NSObject, SKPaymentTransactionObserver {
         }
         
         let result = PurchaseResult.failure(error)
-        completion(result)
+        DispatchQueue.main.async {
+            completion(result)
+        }
     }
     
     private func restored(transaction: SKPaymentTransaction) {
