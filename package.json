@@ -1,0 +1,29 @@
+{
+  "name": "@applicaster/applicaster-iap",
+  "version": "0.0.1",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "files": [
+    "iOS/ApplicasterIAP",
+    "src",
+    "iOS/ApplicasterIAP.podspec"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/applicaster/applicaster-iap-framework"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/applicaster/applicaster-iap-framework"
+  },
+  "homepage": "https://github.com/applicaster/applicaster-iap-framework",
+  "dependencies": {
+    "react": "^16.8.0",
+    "react-native": "^0.59.10"
+  }
+}

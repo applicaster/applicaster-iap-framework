@@ -9,12 +9,18 @@
 import Foundation
 import StoreKit
 
+struct PurchaseKeys {
+    static var item = "item"
+    static var finishing = "finishing"
+    static var amount = "amount"
+    static var transaction = "transaction"
+}
 open class Purchase {
     public let item: SKProduct
     public let finishing: Bool
     public let amount: Int
     public var transaction: SKPaymentTransaction?
-    
+
     init(item: SKProduct,
          amount: Int = 1,
          finishing: Bool = true) {
