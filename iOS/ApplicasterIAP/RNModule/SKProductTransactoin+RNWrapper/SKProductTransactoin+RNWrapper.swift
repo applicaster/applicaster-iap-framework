@@ -5,6 +5,7 @@ import StoreKit
 struct SKPaymentTransactionKeys {
     static let error = "error"
     static let transactionState = "transactionState"
+    static let transactionIdentifier = "transactionIdentifier"
 }
 
 extension SKPaymentTransactionState {
@@ -28,10 +29,15 @@ extension SKPaymentTransactionState {
 
 extension SKPaymentTransaction {
     class func wrappTransactionToDictionary(paymentTransaction: SKPaymentTransaction) -> [String: Any] {
-        return [
-            SKPaymentTransactionKeys.error: RCTMakeError("SKPaymentTransaction Error", paymentTransaction.error?.localizedDescription,
-                                                         nil),
+        var retVal: [String: Any] = [
             SKPaymentTransactionKeys.transactionState: paymentTransaction.transactionState.toString(),
         ]
+        retVal[SKPaymentTransactionKeys.transactionIdentifier] = paymentTransaction.transactionIdentifier
+        if let errorLocalizedDescription = paymentTransaction.error?.localizedDescription {
+            retVal[SKPaymentTransactionKeys.error] = RCTMakeError("SKPaymentTransaction Error",
+                                                                  errorLocalizedDescription,
+                                                                  nil)
+        }
+        return retVal
     }
 }

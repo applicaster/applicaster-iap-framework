@@ -2,6 +2,12 @@ import Foundation
 import React
 import StoreKit
 
+struct ApplicasterIAPBridgeErrors {
+    static let generalError = "ApplicasterIAPBridgeError"
+    static let noProducts = "Products Ids do not exist"
+    static let canNotFindProduct = "Can not find availible identifier:"
+}
+
 @objc(ApplicasterIAPBridge)
 class ApplicasterIAPBridge: NSObject, RCTBridgeModule {
     static var availibleProducts: Set<SKProduct> = []
@@ -18,12 +24,12 @@ class ApplicasterIAPBridge: NSObject, RCTBridgeModule {
         return DispatchQueue.main
     }
 
-    @objc func validate(_ products: Set<String>?,
+    @objc func products(_ products: Set<String>?,
                         resolver: @escaping RCTPromiseResolveBlock,
                         rejecter: @escaping RCTPromiseRejectBlock) {
         guard let products = products else {
-            rejecter("Code",
-                     "Message",
+            rejecter(ApplicasterIAPBridgeErrors.generalError,
+                     ApplicasterIAPBridgeErrors.noProducts,
                      nil)
             return
         }
@@ -38,7 +44,7 @@ class ApplicasterIAPBridge: NSObject, RCTBridgeModule {
                 resolver(["products": SKProduct.wrappProducts(products: products),
                           "invalidIDs": response.invalidIDs])
             case let .failure(error):
-                rejecter("ApplicasterIAP Error",
+                rejecter(ApplicasterIAPBridgeErrors.generalError,
                          error.localizedDescription,
                          error)
             }
@@ -50,18 +56,24 @@ class ApplicasterIAPBridge: NSObject, RCTBridgeModule {
                         rejecter: @escaping RCTPromiseRejectBlock) {
         guard let productIdentifier = productIdentifier,
             let product = ApplicasterIAPBridge.retrieveAvailableProduct(from: productIdentifier) else {
-            rejecter("Code",
-                     "Message",
+            rejecter(ApplicasterIAPBridgeErrors.generalError,
+                     ApplicasterIAPBridgeErrors.canNotFindProduct,
                      nil)
             return
         }
         BillingHelper.sharedInstance.purchase(product) { (result: PurchaseResult) in
             switch result {
             case let .success(purchase):
-                print(purchase)
+                let purchaseDict = purchase.toDictionary()
+                Utils.retrieveReciept { reciept in
+                    resolver([
+                        "reciept": reciept as Any,
+                        "purchase": purchaseDict]
+                    )
+                }
 
             case let .failure(error):
-                rejecter("ApplicasterIAP Error",
+                rejecter(ApplicasterIAPBridgeErrors.generalError,
                          error.localizedDescription,
                          error)
             }
@@ -76,7 +88,7 @@ class ApplicasterIAPBridge: NSObject, RCTBridgeModule {
                 let purchasedItemIDs = transactions.map({ $0.payment.productIdentifier })
                 resolver(purchasedItemIDs)
             case let .failure(error):
-                rejecter("ApplicasterIAP Error",
+                rejecter(ApplicasterIAPBridgeErrors.generalError,
                          error.localizedDescription,
                          error)
             }

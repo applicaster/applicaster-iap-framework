@@ -69,7 +69,8 @@ open class BillingHelper {
         let purchase = Purchase(item: item,
                                 amount: amount,
                                 finishing: finishing)
-        storeObserver.buy(purchase, completion: completion)
+        storeObserver.buy(purchase,
+                          completion: completion)
     }
     
     public func restore(finishing: Bool = true, completion: @escaping (RestoreResult) -> Void) {

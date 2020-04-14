@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		38D01EB6A5F3497FBE5CDEA7 /* Pods_ApplicasterIAP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF33C8E79047FB07A0BAC547 /* Pods_ApplicasterIAP.framework */; };
+		401467B82444FC4F0049CECD /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401467B72444FC4F0049CECD /* Utils.swift */; };
 		40556173243F87FA002D41A7 /* ApplicasterIAPBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40556171243F87FA002D41A7 /* ApplicasterIAPBridge.swift */; };
 		40556174243F87FA002D41A7 /* ReactNativeModulesExports.m in Sources */ = {isa = PBXBuildFile; fileRef = 40556172243F87FA002D41A7 /* ReactNativeModulesExports.m */; };
 		40E2619B243FA10D00881587 /* SKProduct+RNWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E2619A243FA10D00881587 /* SKProduct+RNWrapper.swift */; };
@@ -22,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		401467B72444FC4F0049CECD /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		40556171243F87FA002D41A7 /* ApplicasterIAPBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicasterIAPBridge.swift; sourceTree = "<group>"; };
 		40556172243F87FA002D41A7 /* ReactNativeModulesExports.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReactNativeModulesExports.m; sourceTree = "<group>"; };
 		40E2619A243FA10D00881587 /* SKProduct+RNWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKProduct+RNWrapper.swift"; sourceTree = "<group>"; };
@@ -58,6 +60,14 @@
 				FF33C8E79047FB07A0BAC547 /* Pods_ApplicasterIAP.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		401467B62444FC400049CECD /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				401467B72444FC4F0049CECD /* Utils.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 		40556170243F87FA002D41A7 /* RNModule */ = {
@@ -117,6 +127,7 @@
 		A60A73D7225CC99300BD450D /* ApplicasterIAP */ = {
 			isa = PBXGroup;
 			children = (
+				401467B62444FC400049CECD /* Utils */,
 				40556170243F87FA002D41A7 /* RNModule */,
 				A6E201EC225CCB3800E30715 /* BillingHelper.swift */,
 				A610223F225F3CF300709582 /* StoreObserver.swift */,
@@ -269,6 +280,7 @@
 				40E2619B243FA10D00881587 /* SKProduct+RNWrapper.swift in Sources */,
 				40E2619E243FA8FC00881587 /* SKProductTransactoin+RNWrapper.swift in Sources */,
 				A6E201F2225CD02600E30715 /* ProductsQuery.swift in Sources */,
+				401467B82444FC4F0049CECD /* Utils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -417,6 +429,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.applisacter.applicasteriap;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -447,6 +460,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.applisacter.applicasteriap;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
