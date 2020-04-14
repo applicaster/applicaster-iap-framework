@@ -1,6 +1,6 @@
 {
   "name": "@applicaster/applicaster-iap",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "",
   "main": "src/index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "files": [
     "iOS/ApplicasterIAP",
-    "src",
+    "index.js",
     "iOS/ApplicasterIAP.podspec"
   ],
   "repository": {
