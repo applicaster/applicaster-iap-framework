@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		38D01EB6A5F3497FBE5CDEA7 /* Pods_ApplicasterIAP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF33C8E79047FB07A0BAC547 /* Pods_ApplicasterIAP.framework */; };
+		401467B82444FC4F0049CECD /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401467B72444FC4F0049CECD /* Utils.swift */; };
+		40556173243F87FA002D41A7 /* ApplicasterIAPBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40556171243F87FA002D41A7 /* ApplicasterIAPBridge.swift */; };
+		40556174243F87FA002D41A7 /* ReactNativeModulesExports.m in Sources */ = {isa = PBXBuildFile; fileRef = 40556172243F87FA002D41A7 /* ReactNativeModulesExports.m */; };
+		40E2619B243FA10D00881587 /* SKProduct+RNWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E2619A243FA10D00881587 /* SKProduct+RNWrapper.swift */; };
+		40E2619E243FA8FC00881587 /* SKProductTransactoin+RNWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E2619D243FA8FC00881587 /* SKProductTransactoin+RNWrapper.swift */; };
+		40E261A1243FABB500881587 /* Purchase+RNWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E261A0243FABB500881587 /* Purchase+RNWrapper.swift */; };
 		A60FC4442271FCD500C353C4 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60FC4432271FCD500C353C4 /* Result.swift */; };
 		A6102240225F3CF300709582 /* StoreObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A610223F225F3CF300709582 /* StoreObserver.swift */; };
 		A6102242225F62FC00709582 /* Purchase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6102241225F62FC00709582 /* Purchase.swift */; };
@@ -16,14 +23,23 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		401467B72444FC4F0049CECD /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		40556171243F87FA002D41A7 /* ApplicasterIAPBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicasterIAPBridge.swift; sourceTree = "<group>"; };
+		40556172243F87FA002D41A7 /* ReactNativeModulesExports.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReactNativeModulesExports.m; sourceTree = "<group>"; };
+		40E2619A243FA10D00881587 /* SKProduct+RNWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKProduct+RNWrapper.swift"; sourceTree = "<group>"; };
+		40E2619D243FA8FC00881587 /* SKProductTransactoin+RNWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKProductTransactoin+RNWrapper.swift"; sourceTree = "<group>"; };
+		40E261A0243FABB500881587 /* Purchase+RNWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Purchase+RNWrapper.swift"; sourceTree = "<group>"; };
+		5893EA381D15A3BF2AE9DBDD /* Pods-ApplicasterIAP.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApplicasterIAP.release.xcconfig"; path = "Target Support Files/Pods-ApplicasterIAP/Pods-ApplicasterIAP.release.xcconfig"; sourceTree = "<group>"; };
 		A60A73D5225CC99300BD450D /* ApplicasterIAP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ApplicasterIAP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A60A73D9225CC99300BD450D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A60A73D9225CC99300BD450D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
 		A60FC4432271FCD500C353C4 /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		A610223F225F3CF300709582 /* StoreObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreObserver.swift; sourceTree = "<group>"; };
 		A6102241225F62FC00709582 /* Purchase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Purchase.swift; sourceTree = "<group>"; };
 		A6C40BD72264DF20001365ED /* ReceiptRefreshQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptRefreshQuery.swift; sourceTree = "<group>"; };
 		A6E201EC225CCB3800E30715 /* BillingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillingHelper.swift; sourceTree = "<group>"; };
 		A6E201F1225CD02600E30715 /* ProductsQuery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductsQuery.swift; sourceTree = "<group>"; };
+		BD6A51BD386BE40D4060D59E /* Pods-ApplicasterIAP.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApplicasterIAP.debug.xcconfig"; path = "Target Support Files/Pods-ApplicasterIAP/Pods-ApplicasterIAP.debug.xcconfig"; sourceTree = "<group>"; };
+		FF33C8E79047FB07A0BAC547 /* Pods_ApplicasterIAP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ApplicasterIAP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,17 +47,72 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38D01EB6A5F3497FBE5CDEA7 /* Pods_ApplicasterIAP.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0CF54EDBD1EDF55ECF51AB4F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FF33C8E79047FB07A0BAC547 /* Pods_ApplicasterIAP.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		401467B62444FC400049CECD /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				401467B72444FC4F0049CECD /* Utils.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		40556170243F87FA002D41A7 /* RNModule */ = {
+			isa = PBXGroup;
+			children = (
+				40E2619F243FABA300881587 /* Purchase+RNWrapper */,
+				40E2619C243FA8E000881587 /* SKProductTransactoin+RNWrapper */,
+				40E26199243FA0D400881587 /* SKProduct+Wrapper */,
+				40556171243F87FA002D41A7 /* ApplicasterIAPBridge.swift */,
+				40556172243F87FA002D41A7 /* ReactNativeModulesExports.m */,
+			);
+			path = RNModule;
+			sourceTree = "<group>";
+		};
+		40E26199243FA0D400881587 /* SKProduct+Wrapper */ = {
+			isa = PBXGroup;
+			children = (
+				40E2619A243FA10D00881587 /* SKProduct+RNWrapper.swift */,
+			);
+			path = "SKProduct+Wrapper";
+			sourceTree = "<group>";
+		};
+		40E2619C243FA8E000881587 /* SKProductTransactoin+RNWrapper */ = {
+			isa = PBXGroup;
+			children = (
+				40E2619D243FA8FC00881587 /* SKProductTransactoin+RNWrapper.swift */,
+			);
+			path = "SKProductTransactoin+RNWrapper";
+			sourceTree = "<group>";
+		};
+		40E2619F243FABA300881587 /* Purchase+RNWrapper */ = {
+			isa = PBXGroup;
+			children = (
+				40E261A0243FABB500881587 /* Purchase+RNWrapper.swift */,
+			);
+			path = "Purchase+RNWrapper";
+			sourceTree = "<group>";
+		};
 		A60A73CB225CC99300BD450D = {
 			isa = PBXGroup;
 			children = (
 				A60A73D7225CC99300BD450D /* ApplicasterIAP */,
 				A60A73D6225CC99300BD450D /* Products */,
+				FA16F447CB7B75845AA73736 /* Pods */,
+				0CF54EDBD1EDF55ECF51AB4F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -56,6 +127,8 @@
 		A60A73D7225CC99300BD450D /* ApplicasterIAP */ = {
 			isa = PBXGroup;
 			children = (
+				401467B62444FC400049CECD /* Utils */,
+				40556170243F87FA002D41A7 /* RNModule */,
 				A6E201EC225CCB3800E30715 /* BillingHelper.swift */,
 				A610223F225F3CF300709582 /* StoreObserver.swift */,
 				A6102241225F62FC00709582 /* Purchase.swift */,
@@ -83,6 +156,15 @@
 			name = Types;
 			sourceTree = "<group>";
 		};
+		FA16F447CB7B75845AA73736 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				BD6A51BD386BE40D4060D59E /* Pods-ApplicasterIAP.debug.xcconfig */,
+				5893EA381D15A3BF2AE9DBDD /* Pods-ApplicasterIAP.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -100,6 +182,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A60A73DD225CC99300BD450D /* Build configuration list for PBXNativeTarget "ApplicasterIAP" */;
 			buildPhases = (
+				B817C6E904466768FBC6365B /* [CP] Check Pods Manifest.lock */,
 				A60A73D0225CC99300BD450D /* Headers */,
 				A60A73D1225CC99300BD450D /* Sources */,
 				A60A73D2225CC99300BD450D /* Frameworks */,
@@ -156,6 +239,31 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		B817C6E904466768FBC6365B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ApplicasterIAP-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		A60A73D1225CC99300BD450D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -163,10 +271,16 @@
 			files = (
 				A6E201ED225CCB3800E30715 /* BillingHelper.swift in Sources */,
 				A6102240225F3CF300709582 /* StoreObserver.swift in Sources */,
+				40E261A1243FABB500881587 /* Purchase+RNWrapper.swift in Sources */,
+				40556174243F87FA002D41A7 /* ReactNativeModulesExports.m in Sources */,
 				A6102242225F62FC00709582 /* Purchase.swift in Sources */,
+				40556173243F87FA002D41A7 /* ApplicasterIAPBridge.swift in Sources */,
 				A60FC4442271FCD500C353C4 /* Result.swift in Sources */,
 				A6C40BD82264DF20001365ED /* ReceiptRefreshQuery.swift in Sources */,
+				40E2619B243FA10D00881587 /* SKProduct+RNWrapper.swift in Sources */,
+				40E2619E243FA8FC00881587 /* SKProductTransactoin+RNWrapper.swift in Sources */,
 				A6E201F2225CD02600E30715 /* ProductsQuery.swift in Sources */,
+				401467B82444FC4F0049CECD /* Utils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -297,6 +411,7 @@
 		};
 		A60A73DE225CC99300BD450D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BD6A51BD386BE40D4060D59E /* Pods-ApplicasterIAP.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -306,7 +421,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = IAP/Info.plist;
+				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -314,6 +429,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.applisacter.applicasteriap;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -326,6 +442,7 @@
 		};
 		A60A73DF225CC99300BD450D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5893EA381D15A3BF2AE9DBDD /* Pods-ApplicasterIAP.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -335,7 +452,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = IAP/Info.plist;
+				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -343,6 +460,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.applisacter.applicasteriap;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
