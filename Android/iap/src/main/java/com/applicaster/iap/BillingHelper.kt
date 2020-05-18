@@ -25,8 +25,11 @@ interface BillingHelper {
      *
      * @param skuType A type of the SKU: in-app or subscription
      * @param skusList A list of sku IDs
+     * @param callback An additional listener that will be called as a result of call a function from billing helper
      */
-    fun loadSkuDetails(@BillingClient.SkuType skuType: String, skusList: List<String>)
+    fun loadSkuDetails(@BillingClient.SkuType skuType: String,
+                       skusList: List<String>,
+                       callback: BillingListener? = null)
 
     /**
      * Loads list of SkuDetails for both SkuTypes at the same time
@@ -34,8 +37,10 @@ interface BillingHelper {
      * if operation was failed
      *
      * @param skus A map of sku IDs as key and [BillingClient.SkuType]
+     * @param callback An additional listener that will be called as a result of call a function from billing helpers
      */
-    fun loadSkuDetailsForAllTypes(skus: Map<String, String>)
+    fun loadSkuDetailsForAllTypes(skus: Map<String, String>,
+                                  callback: BillingListener? = null)
 
     /**
      * Get purchases details for all the items of current SkuType bought within app.
@@ -46,8 +51,9 @@ interface BillingHelper {
 
     /**
      * Get purchases details for all the items (for both SkuTypes) bought within app.
+     * @param callback An additional listener that will be called as a result of call a function from billing helper
      */
-    fun restorePurchasesForAllTypes()
+    fun restorePurchasesForAllTypes(callback: BillingListener? = null)
 
     /**
      * Initiate the billing flow for an in-app purchase or subscription.
