@@ -64,8 +64,8 @@ class IAPBridge(reactContext: ReactApplicationContext)
     }
 
     override fun onPurchaseLoaded(purchases: List<Purchase>) {
-        purchases.forEach {purchase ->
-            this.purchaseListeners.remove(purchase.sku)?.resolve(wrap(purchase))
+        purchases.forEach {
+            purchaseListeners.remove(it.sku)?.resolve(wrap(it))
         }
     }
 
