@@ -7,7 +7,6 @@ import com.applicaster.iap.BillingListener
 import com.applicaster.iap.GoogleBillingHelper
 import com.applicaster.iap.reactnative.utils.RestorePromiseListener
 import com.applicaster.iap.reactnative.utils.SKUPromiseListener
-import com.applicaster.iap.reactnative.utils.mapID
 import com.applicaster.iap.reactnative.utils.wrap
 import com.facebook.react.bridge.*
 
@@ -32,7 +31,7 @@ class IAPBridge(reactContext: ReactApplicationContext)
 
     @ReactMethod
     fun products(identifiers: ReadableArray, result: Promise) {
-        val productIds = identifiers.toArrayList().map {mapID(it.toString())}.toMutableList();
+        val productIds = identifiers.toArrayList().map { it.toString() }.toMutableList();
         GoogleBillingHelper.loadSkuDetails(BillingClient.SkuType.SUBS, productIds, SKUPromiseListener(result))
     }
 
@@ -42,7 +41,7 @@ class IAPBridge(reactContext: ReactApplicationContext)
      */
     @ReactMethod
     fun purchase(identifier: String?, result: Promise) {
-        val sku = skuDetailsMap[mapID(identifier!!)]
+        val sku = skuDetailsMap[identifier!!]
         if (null == sku) {
             result.reject(IllegalArgumentException("SKU ${identifier} not found"))
         } else {
@@ -70,6 +69,8 @@ class IAPBridge(reactContext: ReactApplicationContext)
     }
 
     override fun onPurchaseLoadingFailed(statusCode: Int, description: String) {
+        purchaseListeners.values.forEach{ it.reject(statusCode.toString(), description)}
+        purchaseListeners.clear()
     }
 
     override fun onPurchasesRestored(purchases: List<Purchase>) {
@@ -91,6 +92,8 @@ class IAPBridge(reactContext: ReactApplicationContext)
     }
 
     override fun onBillingClientError(statusCode: Int, description: String) {
+        purchaseListeners.values.forEach{ it.reject(statusCode.toString(), description)}
+        purchaseListeners.clear()
     }
 
 }
