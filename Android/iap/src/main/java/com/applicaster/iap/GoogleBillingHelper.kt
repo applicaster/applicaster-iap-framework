@@ -98,10 +98,12 @@ object GoogleBillingHelper : BillingHelper {
     }
 
     override fun restorePurchasesForAllTypes(callback: BillingListener?) {
-        val restoredSubscriptions: List<Purchase> = queryPurchases(BillingClient.SkuType.SUBS)
-        val restoredInapps: List<Purchase> = queryPurchases(BillingClient.SkuType.INAPP)
-        billingListener.onPurchasesRestored( restoredSubscriptions + restoredInapps)
-        callback?.onPurchasesRestored(restoredSubscriptions + restoredInapps)
+        executeFlow {
+            val restoredSubscriptions: List<Purchase> = queryPurchases(BillingClient.SkuType.SUBS)
+            val restoredInapps: List<Purchase> = queryPurchases(BillingClient.SkuType.INAPP)
+            billingListener.onPurchasesRestored(restoredSubscriptions + restoredInapps)
+            callback?.onPurchasesRestored(restoredSubscriptions + restoredInapps)
+        }
     }
 
     override fun consume(purchaseItem: Purchase) {

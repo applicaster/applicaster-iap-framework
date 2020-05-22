@@ -9,7 +9,7 @@ import com.facebook.react.bridge.WritableNativeMap
 fun wrap(skuDetails: SkuDetails): WritableNativeMap {
     val skuDetail = WritableNativeMap()
     skuDetail.putString("productIdentifier", skuDetails.sku)
-    skuDetail.putString("price", skuDetails.price)
+    skuDetail.putString("priceLocale", skuDetails.price)
     skuDetail.putString("localizedTitle", skuDetails.title)
     skuDetail.putString("localizedDescription", skuDetails.description)
     return skuDetail
