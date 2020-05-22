@@ -25,14 +25,19 @@ extension SKProduct {
         retVal[SKProductWrapperKeys.localizedDescription] = product.localizedDescription
         retVal[SKProductWrapperKeys.localizedTitle] = product.localizedTitle
         retVal[SKProductWrapperKeys.price] = product.price
-        retVal[SKProductWrapperKeys.priceLocale] = product.priceLocale
+
         retVal[SKProductWrapperKeys.productIdentifier] = product.productIdentifier
         retVal[SKProductWrapperKeys.isDownloadable] = product.isDownloadable
         retVal[SKProductWrapperKeys.downloadContentLengths] = product.downloadContentLengths
         retVal[SKProductWrapperKeys.contentVersion] = product.contentVersion
         retVal[SKProductWrapperKeys.downloadContentVersion] = product.downloadContentVersion
 
+        let priceFormatter = NumberFormatter()
+        priceFormatter.numberStyle = .currency
+        priceFormatter.locale = product.priceLocale
+        let priceLocale = priceFormatter.string(from: product.price)
+        retVal[SKProductWrapperKeys.priceLocale] = priceLocale
+
         return retVal
     }
 }
-

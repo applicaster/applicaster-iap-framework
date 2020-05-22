@@ -9,7 +9,7 @@
 import Foundation
 
 class Utils {
-    class func retrieveReciept(completion: (_ reciept: String?) -> Void) {
+    class func retrieveReceipt(completion: (_ receipt: String?) -> Void) {
         if let appStoreReceiptURL = Bundle.main.appStoreReceiptURL,
             FileManager.default.fileExists(atPath: appStoreReceiptURL.path) {
             do {

@@ -65,9 +65,9 @@ class ApplicasterIAPBridge: NSObject, RCTBridgeModule {
             switch result {
             case let .success(purchase):
                 let purchaseDict = purchase.toDictionary()
-                Utils.retrieveReciept { reciept in
+                Utils.retrieveReceipt { receipt in
                     resolver([
-                        "reciept": reciept as Any,
+                        "receipt": receipt as Any,
                         "purchase": purchaseDict]
                     )
                 }
