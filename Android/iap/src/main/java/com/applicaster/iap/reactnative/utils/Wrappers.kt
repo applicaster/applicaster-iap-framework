@@ -18,6 +18,6 @@ fun wrap(skuDetails: SkuDetails): WritableNativeMap {
 fun wrap(purchase: Purchase): WritableNativeMap {
     val nativeMap = WritableNativeMap()
     nativeMap.putString("productIdentifier", purchase.sku)
-    nativeMap.putString("receipt", purchase.purchaseToken)
+    nativeMap.putString("receipt", purchase.originalJson)
     return nativeMap
 }
