@@ -20,10 +20,12 @@ class IAPBridge(reactContext: ReactApplicationContext)
 
     init {
         GoogleBillingHelper.init(reactContext, this)
+        GoogleBillingHelper.restorePurchasesForAllTypes()
     }
 
     private val purchaseListeners: MutableMap<String, Promise> = mutableMapOf()
     private val skuDetailsMap: MutableMap<String, SkuDetails> = mutableMapOf()
+    private val purchasesMap: MutableMap<String, Purchase> = mutableMapOf()
 
     override fun getName(): String {
         return bridgeName
@@ -64,16 +66,32 @@ class IAPBridge(reactContext: ReactApplicationContext)
 
     override fun onPurchaseLoaded(purchases: List<Purchase>) {
         purchases.forEach {
+            purchasesMap[it.sku] = it
             purchaseListeners.remove(it.sku)?.resolve(wrap(it))
         }
     }
 
     override fun onPurchaseLoadingFailed(statusCode: Int, description: String) {
-        purchaseListeners.values.forEach{ it.reject(statusCode.toString(), description)}
+
+        if(BillingClient.BillingResponse.ITEM_ALREADY_OWNED == statusCode) {
+            purchaseListeners.forEach{
+                val purchase = purchasesMap.get(it.key)
+                if(null != purchase) {
+                    it.value.resolve(wrap(purchase))
+                } else {
+                    it.value.reject(statusCode.toString(), description)
+                }
+            }
+        } else {
+            purchaseListeners.values.forEach{ it.reject(statusCode.toString(), description)}
+        }
         purchaseListeners.clear()
     }
 
     override fun onPurchasesRestored(purchases: List<Purchase>) {
+        purchases.forEach {
+            purchasesMap[it.sku] = it
+        }
     }
 
     override fun onSkuDetailsLoaded(skuDetails: List<SkuDetails>) {
