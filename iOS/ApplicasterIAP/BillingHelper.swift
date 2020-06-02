@@ -118,4 +118,18 @@ open class BillingHelper {
     public func finishTransaction(_ transaction: SKPaymentTransaction) {
         SKPaymentQueue.default().finishTransaction(transaction)
     }
+    
+    public func unfinishedTransactions() -> [SKPaymentTransaction] {
+        return SKPaymentQueue.default().transactions
+    }
+    
+    public func unfinishedTransaction(_ transactionIdentifier:String) -> SKPaymentTransaction? {
+        return unfinishedTransactions().first { (transaction) -> Bool in
+            if let indentifier = transaction.transactionIdentifier,
+                transactionIdentifier == indentifier {
+                return true
+            }
+            return false
+        }
+    }
 }

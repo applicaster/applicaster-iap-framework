@@ -6,6 +6,7 @@ struct ApplicasterIAPBridgeErrors {
     static let generalError = "ApplicasterIAPBridgeError"
     static let noProducts = "Products Ids do not exist"
     static let canNotFindProduct = "Can not find availible identifier:"
+    static let canNotFinishPurchasedTransaction = "Can not finish purchased transaction for identifier:"
 }
 
 @objc(ApplicasterIAPBridge)
@@ -52,6 +53,7 @@ class ApplicasterIAPBridge: NSObject, RCTBridgeModule {
     }
 
     @objc func purchase(_ productIdentifier: String?,
+                        finishing: NSNumber,
                         resolver: @escaping RCTPromiseResolveBlock,
                         rejecter: @escaping RCTPromiseRejectBlock) {
         guard let productIdentifier = productIdentifier,
@@ -61,16 +63,16 @@ class ApplicasterIAPBridge: NSObject, RCTBridgeModule {
                      nil)
             return
         }
-        BillingHelper.sharedInstance.purchase(product) { (result: PurchaseResult) in
+
+        BillingHelper.sharedInstance.purchase(product, finishing: finishing.boolValue) { (result: PurchaseResult) in
             switch result {
             case let .success(purchase):
                 let purchaseDict = purchase.toDictionary()
-                Utils.retrieveReceipt { receipt in
-                    resolver([
-                        "receipt": receipt as Any,
-                        "purchase": purchaseDict]
-                    )
-                }
+
+                resolver([
+                    "receipt": Utils.receiptInBase64String() as Any,
+                    "purchase": purchaseDict]
+                )
 
             case let .failure(error):
                 rejecter(ApplicasterIAPBridgeErrors.generalError,
@@ -99,5 +101,20 @@ class ApplicasterIAPBridge: NSObject, RCTBridgeModule {
         return availibleProducts.first { (product) -> Bool in
             product.productIdentifier == productIdentifier
         }
+    }
+
+    @objc func finishPurchasedTransaction(_ transactionIdentifier: String?,
+                                          resolver: @escaping RCTPromiseResolveBlock,
+                                          rejecter: @escaping RCTPromiseRejectBlock) {
+        guard let identifier = transactionIdentifier,
+            let unfinishedTransaction = BillingHelper.sharedInstance.unfinishedTransaction(identifier) else {
+            rejecter(ApplicasterIAPBridgeErrors.generalError,
+                     ApplicasterIAPBridgeErrors.canNotFinishPurchasedTransaction + "\(String(describing: transactionIdentifier))",
+                     nil)
+            return
+        }
+
+        BillingHelper.sharedInstance.finishTransaction(unfinishedTransaction)
+        resolver(true)
     }
 }
