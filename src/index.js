@@ -23,10 +23,14 @@ export const ApplicasterIAPModule = {
   /**
    * Purchase item
    * @param {String} productIdentifier Dictionary with user data
+   * @param {Boolean} finishTransactionAfterPurchase Defines if native side should finish transaction
    */
-  async purchase(productIdentifier) {
+  async purchase(productIdentifier, finishTransactionAfterPurchase) {
     try {
-      return ApplicasterIAPBridge.purchase(productIdentifier);
+      return ApplicasterIAPBridge.purchase(
+        productIdentifier,
+        finishTransactionAfterPurchase
+      );
     } catch (e) {
       throw e;
     }
@@ -37,6 +41,18 @@ export const ApplicasterIAPModule = {
   async restore() {
     try {
       return ApplicasterIAPBridge.restore();
+    } catch (e) {
+      throw e;
+    }
+  },
+  /**
+   * Finish purchased transaction
+   */
+  async finishPurchasedTransaction(transactionIdentifier) {
+    try {
+      return ApplicasterIAPBridge.finishPurchasedTransaction(
+        transactionIdentifier
+      );
     } catch (e) {
       throw e;
     }
