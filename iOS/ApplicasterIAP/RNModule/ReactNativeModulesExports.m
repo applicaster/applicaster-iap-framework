@@ -7,6 +7,10 @@ RCT_EXTERN_METHOD(products:(NSSet *)identifiers
                           rejecter:(RCTPromiseRejectBlock)rejecter);
 
 RCT_EXTERN_METHOD(purchase:(NSString *)productIdentifier
+                      resolver:(RCTPromiseResolveBlock)resolver
+                          rejecter:(RCTPromiseRejectBlock)rejecter);
+
+RCT_EXTERN_METHOD(purchase:(NSString *)productIdentifier
                       finishing:(nonnull NSNumber *)finishing
                           resolver:(RCTPromiseResolveBlock)resolver
                               rejecter:(RCTPromiseRejectBlock)rejecter);
