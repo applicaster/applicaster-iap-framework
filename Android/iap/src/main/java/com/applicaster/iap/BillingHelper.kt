@@ -70,6 +70,8 @@ interface BillingHelper {
      */
     fun consume(purchaseItem: Purchase)
 
+    fun consume(purchaseToken: String, callback: BillingListener? = null)
+
     /**
      * Validates purchases locally on the device
      *

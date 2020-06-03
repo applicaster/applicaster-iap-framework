@@ -5,6 +5,7 @@ import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.SkuDetails
 import com.applicaster.iap.BillingListener
 import com.applicaster.iap.GoogleBillingHelper
+import com.applicaster.iap.reactnative.utils.ConsumePromiseListener
 import com.applicaster.iap.reactnative.utils.RestorePromiseListener
 import com.applicaster.iap.reactnative.utils.SKUPromiseListener
 import com.applicaster.iap.reactnative.utils.wrap
@@ -34,7 +35,7 @@ class IAPBridge(reactContext: ReactApplicationContext)
     @ReactMethod
     fun products(identifiers: ReadableArray, result: Promise) {
         val productIds = identifiers.toArrayList().map { it.toString() }.toMutableList();
-        GoogleBillingHelper.loadSkuDetails(BillingClient.SkuType.SUBS, productIds, SKUPromiseListener(result))
+        GoogleBillingHelper.loadSkuDetails(BillingClient.SkuType.INAPP, productIds, SKUPromiseListener(result))
     }
 
     /**
@@ -56,12 +57,26 @@ class IAPBridge(reactContext: ReactApplicationContext)
         }
     }
 
+    @ReactMethod
+    fun purchase(identifier: String?, finishTransactionAfterPurchase: Boolean, result: Promise) {
+        // todo: finishTransactionAfterPurchase
+        purchase(identifier, result)
+    }
+
     /**
      * Restore Purchases
      */
     @ReactMethod
     fun restore(result: Promise) {
         GoogleBillingHelper.restorePurchasesForAllTypes(RestorePromiseListener(result))
+    }
+
+    /**
+     *  Acknowledge
+     */
+    @ReactMethod
+    fun finishPurchasedTransaction(transactionIdentifier: String, result: Promise) {
+        GoogleBillingHelper.consume(transactionIdentifier, ConsumePromiseListener(result))
     }
 
     override fun onPurchaseLoaded(purchases: List<Purchase>) {
