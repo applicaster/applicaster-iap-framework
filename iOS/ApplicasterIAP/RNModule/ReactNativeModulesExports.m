@@ -10,11 +10,6 @@ RCT_EXTERN_METHOD(purchase:(NSDictionary *)payload
                       resolver:(RCTPromiseResolveBlock)resolver
                           rejecter:(RCTPromiseRejectBlock)rejecter);
 
-RCT_EXTERN_METHOD(purchase:(NSDictionary *)payload
-                      finishing:(nonnull NSNumber *)finishing
-                          resolver:(RCTPromiseResolveBlock)resolver
-                              rejecter:(RCTPromiseRejectBlock)rejecter);
-
 RCT_EXTERN_METHOD(restore:(RCTPromiseResolveBlock)resolver
                       rejecter:(RCTPromiseRejectBlock)rejecter);
 

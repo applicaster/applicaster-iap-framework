@@ -50,7 +50,6 @@ class ApplicasterIAPBridge: NSObject, RCTBridgeModule {
     }
 
     @objc func purchase(_ payload: [String: Any]?,
-                        finishing: NSNumber,
                         resolver: @escaping RCTPromiseResolveBlock,
                         rejecter: @escaping RCTPromiseRejectBlock) {
         guard let payload = payload,
@@ -62,7 +61,9 @@ class ApplicasterIAPBridge: NSObject, RCTBridgeModule {
             return
         }
 
-        BillingHelper.sharedInstance.purchase(product, finishing: finishing.boolValue) { (result: PurchaseResult) in
+        let finishing = payload[ReactNativeProductsKeys.finishing] as? Bool ?? true
+        BillingHelper.sharedInstance.purchase(product,
+                                              finishing: finishing) { (result: PurchaseResult) in
             switch result {
             case let .success(purchase):
                 let purchaseDict = purchase.toDictionary()

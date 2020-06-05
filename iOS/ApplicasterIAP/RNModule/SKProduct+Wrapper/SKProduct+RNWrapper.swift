@@ -11,6 +11,8 @@ struct SKProductWrapperKeys {
     static let contentVersion = "contentVersion"
     static let downloadContentVersion = "downloadContentVersion"
     static let subscriptionPeriod = "subscriptionPeriod"
+    static let productType = "productType"
+
 }
 
 extension SKProduct {

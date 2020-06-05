@@ -16,6 +16,7 @@ struct ApplicasterIAPBridgeErrors {
 struct ReactNativeProductsKeys {
     static let productIdentifier = "productIdentifier"
     static let productType = "productType"
+    static let finishing = "finishing"
     struct ProductType {
         static let consumable = "consumable"
         static let nonConsumable = "nonConsumable"
@@ -24,7 +25,7 @@ struct ReactNativeProductsKeys {
 }
 
 struct ReactNativeProductsResponseKeys {
-    static let payload = "invalidIDs"
+    static let payload = "payload"
     static let invalidIDs = "invalidIDs"
     static let products = "products"
 }
