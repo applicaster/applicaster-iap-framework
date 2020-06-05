@@ -107,7 +107,11 @@ object GoogleBillingHelper : BillingHelper {
     }
 
     override fun consume(purchaseItem: Purchase) {
-        executeFlow { consumeAsync(purchaseItem.purchaseToken) }
+        consume(purchaseItem.purchaseToken, null)
+    }
+
+    override fun consume(purchaseToken: String, callback: BillingListener?) {
+        executeFlow { consumeAsync(purchaseToken, callback) }
     }
 
     override fun validatePurchases(appPublicKey: String, purchases: List<Purchase>) {
@@ -239,16 +243,21 @@ object GoogleBillingHelper : BillingHelper {
         billingClient.launchBillingFlow(activity, flowParams)
     }
 
-    private fun consumeAsync(purchaseToken: String) {
+    private fun consumeAsync(purchaseToken: String, callback: BillingListener?) {
         billingClient.consumeAsync(purchaseToken) { responseCode, outToken ->
             when (responseCode) {
                 BillingClient.BillingResponse.OK -> {
                     billingListener.onPurchaseConsumed(outToken)
+                    callback?.onPurchaseConsumed(outToken)
                 }
                 else -> {
                     billingListener.onPurchaseConsumptionFailed(
-                        responseCode,
-                        handleErrorResult(responseCode)
+                            responseCode,
+                            handleErrorResult(responseCode)
+                    )
+                    callback?.onPurchaseConsumptionFailed(
+                            responseCode,
+                            handleErrorResult(responseCode)
                     )
                 }
             }

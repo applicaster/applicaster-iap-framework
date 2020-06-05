@@ -10,7 +10,8 @@
     "iOS/ApplicasterIAP",
     "src",
     "iOS/ApplicasterIAP.podspec",
-    "Android/iap"
+    "Android/iap",
+    "Android/iap-rn"
   ],
   "repository": {
     "type": "git",
