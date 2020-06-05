@@ -43,7 +43,10 @@ class IAPBridge(reactContext: ReactApplicationContext)
      * @param {String} productIdentifier Dictionary with user data
      */
     @ReactMethod
-    fun purchase(identifier: String, result: Promise) {
+    fun purchase(payload: ReadableMap, result: Promise) {
+        val identifier = payload.getString("productIdentifier")
+        // todo: finishTransactionAfterPurchase is not used now
+        val finishTransactionAfterPurchase = payload.getBoolean("finishing")
         val sku = skuDetailsMap[identifier]
         if (null == sku) {
             result.reject(IllegalArgumentException("SKU $identifier not found"))
@@ -55,12 +58,6 @@ class IAPBridge(reactContext: ReactApplicationContext)
             this.purchaseListeners[sku.sku] = result
             GoogleBillingHelper.purchase(reactApplicationContext.currentActivity!!, sku)
         }
-    }
-
-    @ReactMethod
-    fun purchase(identifier: String, finishTransactionAfterPurchase: Boolean, result: Promise) {
-        // todo: finishTransactionAfterPurchase
-        purchase(identifier, result)
     }
 
     /**
