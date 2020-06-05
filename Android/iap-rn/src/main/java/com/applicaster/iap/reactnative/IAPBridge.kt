@@ -72,8 +72,19 @@ class IAPBridge(reactContext: ReactApplicationContext)
      *  Acknowledge
      */
     @ReactMethod
-    fun finishPurchasedTransaction(transactionIdentifier: String, result: Promise) {
-        GoogleBillingHelper.consume(transactionIdentifier, ConsumePromiseListener(result))
+    fun finishPurchasedTransaction(transaction: ReadableMap, result: Promise) {
+        val identifier = transaction.getString("productIdentifier")!!
+        val transactionIdentifier = transaction.getString("transactionIdentifier")!!
+        val skuDetails = skuDetailsMap[identifier]
+        if(null != skuDetails){
+            if(BillingClient.SkuType.INAPP == skuDetails.type) {
+                GoogleBillingHelper.consume(transactionIdentifier, ConsumePromiseListener(result))
+            }
+        } else {
+            result.reject(
+                    "SKU details not loaded $transactionIdentifier",
+                    IllegalArgumentException("SKU details not loaded $transactionIdentifier"))
+        }
     }
 
     override fun onPurchaseLoaded(purchases: List<Purchase>) {
