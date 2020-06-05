@@ -2,10 +2,9 @@ import Foundation
 import StoreKit
 
 struct SKProductWrapperKeys {
-    static let localizedDescription = "localizedDescription"
-    static let localizedTitle = "localizedTitle"
+    static let localizedDescription = "description"
+    static let localizedTitle = "title"
     static let price = "price"
-    static let priceLocale = "priceLocale"
     static let productIdentifier = "productIdentifier"
     static let isDownloadable = "isDownloadable"
     static let downloadContentLengths = "downloadContentLengths"
@@ -24,20 +23,20 @@ extension SKProduct {
 
         retVal[SKProductWrapperKeys.localizedDescription] = product.localizedDescription
         retVal[SKProductWrapperKeys.localizedTitle] = product.localizedTitle
-        retVal[SKProductWrapperKeys.price] = product.price
-
+        retVal[SKProductWrapperKeys.price] = product.localizedPrice()
         retVal[SKProductWrapperKeys.productIdentifier] = product.productIdentifier
         retVal[SKProductWrapperKeys.isDownloadable] = product.isDownloadable
         retVal[SKProductWrapperKeys.downloadContentLengths] = product.downloadContentLengths
         retVal[SKProductWrapperKeys.contentVersion] = product.contentVersion
         retVal[SKProductWrapperKeys.downloadContentVersion] = product.downloadContentVersion
 
+        return retVal
+    }
+
+    func localizedPrice() -> String? {
         let priceFormatter = NumberFormatter()
         priceFormatter.numberStyle = .currency
-        priceFormatter.locale = product.priceLocale
-        let priceLocale = priceFormatter.string(from: product.price)
-        retVal[SKProductWrapperKeys.priceLocale] = priceLocale
-
-        return retVal
+        priceFormatter.locale = priceLocale
+        return priceFormatter.string(from: price)
     }
 }

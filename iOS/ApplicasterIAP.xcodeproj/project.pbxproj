@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		38D01EB6A5F3497FBE5CDEA7 /* Pods_ApplicasterIAP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF33C8E79047FB07A0BAC547 /* Pods_ApplicasterIAP.framework */; };
 		401467B82444FC4F0049CECD /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401467B72444FC4F0049CECD /* Utils.swift */; };
+		402A5AF3248A91DE000FD188 /* ApplicasterIAPBridgeConsts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 402A5AF2248A91DE000FD188 /* ApplicasterIAPBridgeConsts.swift */; };
 		40556173243F87FA002D41A7 /* ApplicasterIAPBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40556171243F87FA002D41A7 /* ApplicasterIAPBridge.swift */; };
 		40556174243F87FA002D41A7 /* ReactNativeModulesExports.m in Sources */ = {isa = PBXBuildFile; fileRef = 40556172243F87FA002D41A7 /* ReactNativeModulesExports.m */; };
 		40E2619B243FA10D00881587 /* SKProduct+RNWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E2619A243FA10D00881587 /* SKProduct+RNWrapper.swift */; };
@@ -24,6 +25,7 @@
 
 /* Begin PBXFileReference section */
 		401467B72444FC4F0049CECD /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		402A5AF2248A91DE000FD188 /* ApplicasterIAPBridgeConsts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicasterIAPBridgeConsts.swift; sourceTree = "<group>"; };
 		40556171243F87FA002D41A7 /* ApplicasterIAPBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicasterIAPBridge.swift; sourceTree = "<group>"; };
 		40556172243F87FA002D41A7 /* ReactNativeModulesExports.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReactNativeModulesExports.m; sourceTree = "<group>"; };
 		40E2619A243FA10D00881587 /* SKProduct+RNWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKProduct+RNWrapper.swift"; sourceTree = "<group>"; };
@@ -77,6 +79,7 @@
 				40E2619C243FA8E000881587 /* SKProductTransactoin+RNWrapper */,
 				40E26199243FA0D400881587 /* SKProduct+Wrapper */,
 				40556171243F87FA002D41A7 /* ApplicasterIAPBridge.swift */,
+				402A5AF2248A91DE000FD188 /* ApplicasterIAPBridgeConsts.swift */,
 				40556172243F87FA002D41A7 /* ReactNativeModulesExports.m */,
 			);
 			path = RNModule;
@@ -279,6 +282,7 @@
 				A6C40BD82264DF20001365ED /* ReceiptRefreshQuery.swift in Sources */,
 				40E2619B243FA10D00881587 /* SKProduct+RNWrapper.swift in Sources */,
 				40E2619E243FA8FC00881587 /* SKProductTransactoin+RNWrapper.swift in Sources */,
+				402A5AF3248A91DE000FD188 /* ApplicasterIAPBridgeConsts.swift in Sources */,
 				A6E201F2225CD02600E30715 /* ProductsQuery.swift in Sources */,
 				401467B82444FC4F0049CECD /* Utils.swift in Sources */,
 			);
