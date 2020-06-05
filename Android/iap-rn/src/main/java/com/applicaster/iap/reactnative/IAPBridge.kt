@@ -43,8 +43,7 @@ class IAPBridge(reactContext: ReactApplicationContext)
      * @param {String} productIdentifier Dictionary with user data
      */
     @ReactMethod
-    fun purchase(product: ReadableMap, result: Promise) {
-        val identifier = product.getString("productIdentifier")
+    fun purchase(identifier: String, result: Promise) {
         val sku = skuDetailsMap[identifier]
         if (null == sku) {
             result.reject(IllegalArgumentException("SKU $identifier not found"))
@@ -59,9 +58,9 @@ class IAPBridge(reactContext: ReactApplicationContext)
     }
 
     @ReactMethod
-    fun purchase(product: ReadableMap, finishTransactionAfterPurchase: Boolean, result: Promise) {
+    fun purchase(identifier: String, finishTransactionAfterPurchase: Boolean, result: Promise) {
         // todo: finishTransactionAfterPurchase
-        purchase(product, result)
+        purchase(identifier, result)
     }
 
     /**
@@ -76,8 +75,7 @@ class IAPBridge(reactContext: ReactApplicationContext)
      *  Acknowledge
      */
     @ReactMethod
-    fun finishPurchasedTransaction(transaction: ReadableMap, result: Promise) {
-        val transactionIdentifier = transaction.getString("transactionIdentifier")!!
+    fun finishPurchasedTransaction(transactionIdentifier: String, result: Promise) {
         GoogleBillingHelper.consume(transactionIdentifier, ConsumePromiseListener(result))
     }
 
