@@ -15,6 +15,26 @@ class IAPBridge(reactContext: ReactApplicationContext)
     companion object {
         const val bridgeName = "ApplicasterIAPBridge"
         const val TAG = bridgeName
+
+        const val subscription = "subscription"
+        const val nonConsumable = "nonConsumable"
+        const val consumable = "consumable"
+
+        // map product fields for IAP library and update sky type lookup table
+        fun unwrapProductIdentifier(map: HashMap<String, String>,
+                                    skuTypesCache: MutableMap<String, String>): Pair<String, String> {
+            val productId = map["productIdentifier"]!!
+            val productType = map["productType"]!!
+            skuTypesCache[productId] = productType
+            return Pair(
+                    productId,
+                    when (productType) {
+                        subscription -> BillingClient.SkuType.SUBS
+                        nonConsumable -> BillingClient.SkuType.INAPP
+                        consumable -> BillingClient.SkuType.INAPP
+                        else -> throw IllegalArgumentException("Unknown SKU type ${map["productType"]}")
+                    })
+        }
     }
 
     init {
@@ -24,8 +44,15 @@ class IAPBridge(reactContext: ReactApplicationContext)
 
     // map SKU been purchased to listened and a flag indicating whether instant acknowledge is needed
     private val purchaseListeners: MutableMap<String, Pair<Promise, Boolean>> = mutableMapOf()
+
+    // lookup map to SkuDetails
     private val skuDetailsMap: MutableMap<String, SkuDetails> = mutableMapOf()
+
+    // map of purchases owned
     private val purchasesMap: MutableMap<String, Purchase> = mutableMapOf()
+
+    // cache for initial purchase type since Google billing does not distinguish consumables and non-consumables
+    private val skuTypes: MutableMap<String, String> = mutableMapOf()
 
     override fun getName(): String {
         return bridgeName
@@ -34,14 +61,14 @@ class IAPBridge(reactContext: ReactApplicationContext)
     @ReactMethod
     fun products(identifiers: ReadableArray, result: Promise) {
         val productIds = identifiers.toArrayList().map {
-            unwrapProductIdentifier(it as HashMap<String, String>)
+            unwrapProductIdentifier(it as HashMap<String, String>, skuTypes)
         }.toMap()
         GoogleBillingHelper.loadSkuDetailsForAllTypes(productIds, SKUPromiseListener(result))
     }
 
     /**
      * Purchase item
-     * @param {String} productIdentifier Dictionary with user data
+     * @param payload Dictionary with purchase data and flow information
      */
     @ReactMethod
     fun purchase(payload: ReadableMap, result: Promise) {
@@ -78,24 +105,31 @@ class IAPBridge(reactContext: ReactApplicationContext)
         acknowledge(identifier, transactionIdentifier, result)
     }
 
+    private fun acknowledge(identifier: String, transactionIdentifier: String, result: Promise) {
+        val skuDetails = skuDetailsMap[identifier]
+        if (null == skuDetails) {
+            result.reject(IllegalArgumentException("SKU details are not loaded $transactionIdentifier"))
+            return
+        }
+        if (BillingClient.SkuType.INAPP == skuDetails.type) {
+            when (skuTypes[identifier]) {
+                subscription -> result.reject(RuntimeException("InApp acknowledge flow triggered for subscription"))
+                nonConsumable -> result.resolve(transactionIdentifier) // not needed at this billing lib API version
+                consumable -> GoogleBillingHelper.consume(transactionIdentifier, ConsumePromiseListener(result))
+                null -> result.reject(IllegalArgumentException("SKU type details not loaded $transactionIdentifier"))
+                else -> result.reject(IllegalArgumentException("SKU type ${skuTypes[identifier]} not handed in acknowledge $transactionIdentifier"))
+            }
+        } else if (BillingClient.SkuType.SUBS == skuDetails.type) {
+            // not needed at this billing lib API version
+            result.resolve(transactionIdentifier)
+        }
+    }
+
     private fun acknowledgeIfNeeded(it: Pair<Promise, Boolean>, p: Purchase) {
         if (!it.second) {
             it.first.resolve(wrap(p))
         } else {
             acknowledge(p.sku, p.purchaseToken, it.first)
-        }
-    }
-
-    private fun acknowledge(identifier: String, transactionIdentifier: String, result: Promise) {
-        val skuDetails = skuDetailsMap[identifier]
-        if (null != skuDetails) {
-            if (BillingClient.SkuType.INAPP == skuDetails.type) {
-                GoogleBillingHelper.consume(transactionIdentifier, ConsumePromiseListener(result))
-            }
-        } else {
-            result.reject(
-                    "SKU details not loaded $transactionIdentifier",
-                    IllegalArgumentException("SKU details not loaded $transactionIdentifier"))
         }
     }
 
@@ -112,7 +146,7 @@ class IAPBridge(reactContext: ReactApplicationContext)
         Log.e(TAG, "onPurchaseLoadingFailed: $statusCode $description")
         if(BillingClient.BillingResponse.ITEM_ALREADY_OWNED == statusCode) {
             purchaseListeners.forEach{
-                val purchase = purchasesMap.get(it.key)
+                val purchase = purchasesMap[it.key]
                 if(null != purchase) {
                     acknowledgeIfNeeded(it.value, purchase)
                 } else {
