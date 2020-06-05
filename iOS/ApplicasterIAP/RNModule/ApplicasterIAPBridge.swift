@@ -2,13 +2,6 @@ import Foundation
 import React
 import StoreKit
 
-struct ApplicasterIAPBridgeErrors {
-    static let generalError = "ApplicasterIAPBridgeError"
-    static let noProducts = "Products Ids do not exist"
-    static let canNotFindProduct = "Can not find availible identifier:"
-    static let canNotFinishPurchasedTransaction = "Can not finish purchased transaction for identifier:"
-}
-
 @objc(ApplicasterIAPBridge)
 class ApplicasterIAPBridge: NSObject, RCTBridgeModule {
     static var availibleProducts: Set<SKProduct> = []
@@ -25,16 +18,17 @@ class ApplicasterIAPBridge: NSObject, RCTBridgeModule {
         return DispatchQueue.main
     }
 
-    @objc func products(_ products: Set<String>?,
+    @objc func products(_ payload: [[String: Any]]?,
                         resolver: @escaping RCTPromiseResolveBlock,
                         rejecter: @escaping RCTPromiseRejectBlock) {
-        guard let products = products else {
+        guard let payload = payload else {
             rejecter(ApplicasterIAPBridgeErrors.generalError,
                      ApplicasterIAPBridgeErrors.noProducts,
                      nil)
             return
         }
 
+        let products = Set(payload.map({ $0[ReactNativeProductsKeys.productIdentifier] as! String }))
         BillingHelper.sharedInstance.products(products) { (result: ProductsQueryResult) in
             switch result {
             case let .success(response):
@@ -42,8 +36,11 @@ class ApplicasterIAPBridge: NSObject, RCTBridgeModule {
 
                 products.forEach({ ApplicasterIAPBridge.availibleProducts.insert($0) })
 
-                resolver(["products": SKProduct.wrappProducts(products: products),
-                          "invalidIDs": response.invalidIDs])
+                resolver([
+                    ReactNativeProductsResponseKeys.products: SKProduct.wrappProducts(products: products),
+                    ReactNativeProductsResponseKeys.invalidIDs: response.invalidIDs,
+                    ReactNativeProductsResponseKeys.payload: payload,
+                ])
             case let .failure(error):
                 rejecter(ApplicasterIAPBridgeErrors.generalError,
                          error.localizedDescription,
@@ -52,11 +49,12 @@ class ApplicasterIAPBridge: NSObject, RCTBridgeModule {
         }
     }
 
-    @objc func purchase(_ productIdentifier: String?,
+    @objc func purchase(_ payload: [String: Any]?,
                         finishing: NSNumber,
                         resolver: @escaping RCTPromiseResolveBlock,
                         rejecter: @escaping RCTPromiseRejectBlock) {
-        guard let productIdentifier = productIdentifier,
+        guard let payload = payload,
+            let productIdentifier = payload[ReactNativeProductsKeys.productIdentifier] as? String,
             let product = ApplicasterIAPBridge.retrieveAvailableProduct(from: productIdentifier) else {
             rejecter(ApplicasterIAPBridgeErrors.generalError,
                      ApplicasterIAPBridgeErrors.canNotFindProduct,
@@ -70,9 +68,12 @@ class ApplicasterIAPBridge: NSObject, RCTBridgeModule {
                 let purchaseDict = purchase.toDictionary()
 
                 resolver([
-                    "receipt": Utils.receiptInBase64String() as Any,
-                    "purchase": purchaseDict]
-                )
+                    ReacеNativePurchaseResponseKeys.receipt: Utils.receiptInBase64String() as Any,
+                    ReacеNativePurchaseResponseKeys.productIdentifier: purchase.item.productIdentifier,
+                    ReacеNativePurchaseResponseKeys.transactionIdentifier: purchase.transaction?.transactionIdentifier as Any,
+                    ReacеNativePurchaseResponseKeys.appleInfo: purchaseDict,
+                    ReacеNativePurchaseResponseKeys.payload: payload,
+                ])
 
             case let .failure(error):
                 rejecter(ApplicasterIAPBridgeErrors.generalError,
@@ -103,13 +104,14 @@ class ApplicasterIAPBridge: NSObject, RCTBridgeModule {
         }
     }
 
-    @objc func finishPurchasedTransaction(_ transactionIdentifier: String?,
+    @objc func finishPurchasedTransaction(_ payload: [String: Any]?,
                                           resolver: @escaping RCTPromiseResolveBlock,
                                           rejecter: @escaping RCTPromiseRejectBlock) {
-        guard let identifier = transactionIdentifier,
+        guard let payload = payload,
+            let identifier = payload["transactionIdentifier"] as? String,
             let unfinishedTransaction = BillingHelper.sharedInstance.unfinishedTransaction(identifier) else {
             rejecter(ApplicasterIAPBridgeErrors.generalError,
-                     ApplicasterIAPBridgeErrors.canNotFinishPurchasedTransaction + "\(String(describing: transactionIdentifier))",
+                     ApplicasterIAPBridgeErrors.canNotFinishPurchasedTransaction,
                      nil)
             return
         }

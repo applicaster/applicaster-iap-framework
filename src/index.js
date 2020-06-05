@@ -10,22 +10,38 @@ const { ApplicasterIAPBridge = defaultIAP } = NativeModules;
 
 export const ApplicasterIAPModule = {
   /**
-   * Retrieve product fro identifiers
-   * @param {Array} identifiers Dictionary with user data
+   * Retrieve product for payload
+   * @param {Array} payload Array of products data
    */
-  async products(identifiers) {
+  async products(payload) {
     try {
       return ApplicasterIAPBridge.products(identifiers);
     } catch (e) {
       throw e;
     }
   },
+
   /**
    * Purchase item
-   * @param {String} productIdentifier Dictionary with user data
+   * @param {Object} payload Dictionary with user data
    * @param {Boolean} finishTransactionAfterPurchase Defines if native side should finish transaction
    */
-  async purchase(productIdentifier, finishTransactionAfterPurchase) {
+  async purchase(payload, finishTransactionAfterPurchase) {
+    try {
+      return ApplicasterIAPBridge.purchase(
+        payload,
+        finishTransactionAfterPurchase
+      );
+    } catch (e) {
+      throw e;
+    }
+  },
+
+  /**
+   * Purchase item
+   * @param {Object} payload Dictionary with user data
+   */
+  async purchase(payload) {
     try {
       return ApplicasterIAPBridge.purchase(
         productIdentifier,
@@ -47,8 +63,9 @@ export const ApplicasterIAPModule = {
   },
   /**
    * Finish purchased transaction
+   * @param {Object} payload Dictionary transaction to finalize
    */
-  async finishPurchasedTransaction(transactionIdentifier) {
+  async finishPurchasedTransaction(payload) {
     try {
       return ApplicasterIAPBridge.finishPurchasedTransaction(
         transactionIdentifier

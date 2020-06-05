@@ -2,15 +2,15 @@
 
 @interface RCT_EXTERN_MODULE (ApplicasterIAPBridge, NSObject)
 
-RCT_EXTERN_METHOD(products:(NSSet *)identifiers
+RCT_EXTERN_METHOD(products:(NSArray *)payload
                       resolver:(RCTPromiseResolveBlock)resolver
                           rejecter:(RCTPromiseRejectBlock)rejecter);
 
-RCT_EXTERN_METHOD(purchase:(NSString *)productIdentifier
+RCT_EXTERN_METHOD(purchase:(NSDictionary *)payload
                       resolver:(RCTPromiseResolveBlock)resolver
                           rejecter:(RCTPromiseRejectBlock)rejecter);
 
-RCT_EXTERN_METHOD(purchase:(NSString *)productIdentifier
+RCT_EXTERN_METHOD(purchase:(NSDictionary *)payload
                       finishing:(nonnull NSNumber *)finishing
                           resolver:(RCTPromiseResolveBlock)resolver
                               rejecter:(RCTPromiseRejectBlock)rejecter);
@@ -18,7 +18,7 @@ RCT_EXTERN_METHOD(purchase:(NSString *)productIdentifier
 RCT_EXTERN_METHOD(restore:(RCTPromiseResolveBlock)resolver
                       rejecter:(RCTPromiseRejectBlock)rejecter);
 
-RCT_EXTERN_METHOD(finishPurchasedTransaction:(NSString *)transactionIdentifier
+RCT_EXTERN_METHOD(finishPurchasedTransaction:(NSDictionary *)payload
                       resolver:(RCTPromiseResolveBlock)resolver
                           rejecter:(RCTPromiseRejectBlock)rejecter);
 @end
