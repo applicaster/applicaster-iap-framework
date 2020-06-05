@@ -76,7 +76,8 @@ class IAPBridge(reactContext: ReactApplicationContext)
      *  Acknowledge
      */
     @ReactMethod
-    fun finishPurchasedTransaction(transactionIdentifier: String, result: Promise) {
+    fun finishPurchasedTransaction(transaction: ReadableMap, result: Promise) {
+        val transactionIdentifier = transaction.getString("transactionIdentifier")!!
         GoogleBillingHelper.consume(transactionIdentifier, ConsumePromiseListener(result))
     }
 
