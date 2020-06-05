@@ -1,14 +1,12 @@
 package com.applicaster.iap.reactnative
 
+import android.util.Log
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.SkuDetails
 import com.applicaster.iap.BillingListener
 import com.applicaster.iap.GoogleBillingHelper
-import com.applicaster.iap.reactnative.utils.ConsumePromiseListener
-import com.applicaster.iap.reactnative.utils.RestorePromiseListener
-import com.applicaster.iap.reactnative.utils.SKUPromiseListener
-import com.applicaster.iap.reactnative.utils.wrap
+import com.applicaster.iap.reactnative.utils.*
 import com.facebook.react.bridge.*
 
 class IAPBridge(reactContext: ReactApplicationContext)
@@ -34,8 +32,10 @@ class IAPBridge(reactContext: ReactApplicationContext)
 
     @ReactMethod
     fun products(identifiers: ReadableArray, result: Promise) {
-        val productIds = identifiers.toArrayList().map { it.toString() }.toMutableList();
-        GoogleBillingHelper.loadSkuDetails(BillingClient.SkuType.INAPP, productIds, SKUPromiseListener(result))
+        val productIds = identifiers.toArrayList().map {
+            unwrapProductIdentifier(it as HashMap<String, String>)
+        }.toMap()
+        GoogleBillingHelper.loadSkuDetailsForAllTypes(productIds, SKUPromiseListener(result))
     }
 
     /**
@@ -43,13 +43,14 @@ class IAPBridge(reactContext: ReactApplicationContext)
      * @param {String} productIdentifier Dictionary with user data
      */
     @ReactMethod
-    fun purchase(identifier: String?, result: Promise) {
-        val sku = skuDetailsMap[identifier!!]
+    fun purchase(product: ReadableMap, result: Promise) {
+        val identifier = product.getString("productIdentifier")
+        val sku = skuDetailsMap[identifier]
         if (null == sku) {
-            result.reject(IllegalArgumentException("SKU ${identifier} not found"))
+            result.reject(IllegalArgumentException("SKU $identifier not found"))
         } else {
             if(purchaseListeners.containsKey(sku.sku)) {
-                result.reject(IllegalArgumentException("Another purchase is in progress for SKU ${identifier}"))
+                result.reject(IllegalArgumentException("Another purchase is in progress for SKU $identifier"))
                 return
             }
             this.purchaseListeners[sku.sku] = result
@@ -58,9 +59,9 @@ class IAPBridge(reactContext: ReactApplicationContext)
     }
 
     @ReactMethod
-    fun purchase(identifier: String?, finishTransactionAfterPurchase: Boolean, result: Promise) {
+    fun purchase(product: ReadableMap, finishTransactionAfterPurchase: Boolean, result: Promise) {
         // todo: finishTransactionAfterPurchase
-        purchase(identifier, result)
+        purchase(product, result)
     }
 
     /**
@@ -87,7 +88,7 @@ class IAPBridge(reactContext: ReactApplicationContext)
     }
 
     override fun onPurchaseLoadingFailed(statusCode: Int, description: String) {
-
+        Log.e(TAG, "onPurchaseLoadingFailed: $statusCode $description")
         if(BillingClient.BillingResponse.ITEM_ALREADY_OWNED == statusCode) {
             purchaseListeners.forEach{
                 val purchase = purchasesMap.get(it.key)
@@ -116,15 +117,18 @@ class IAPBridge(reactContext: ReactApplicationContext)
     }
 
     override fun onSkuDetailsLoadingFailed(statusCode: Int, description: String) {
+        Log.e(TAG, "onSkuDetailsLoadingFailed: $statusCode $description")
     }
 
     override fun onPurchaseConsumed(purchaseToken: String) {
     }
 
     override fun onPurchaseConsumptionFailed(statusCode: Int, description: String) {
+        Log.e(TAG, "onPurchaseConsumptionFailed: $statusCode $description")
     }
 
     override fun onBillingClientError(statusCode: Int, description: String) {
+        Log.e(TAG, "onBillingClientError: $statusCode $description")
         purchaseListeners.values.forEach{ it.reject(statusCode.toString(), description)}
         purchaseListeners.clear()
     }
