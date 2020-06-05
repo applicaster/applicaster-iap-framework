@@ -21,8 +21,8 @@ class IAPBridge(reactContext: ReactApplicationContext)
         const val consumable = "consumable"
 
         // map product fields for IAP library and update sky type lookup table
-        fun unwrapProductIdentifier(map: HashMap<String, String>,
-                                    skuTypesCache: MutableMap<String, String>): Pair<String, String> {
+        private fun unwrapProductIdentifier(map: HashMap<String, String>,
+                                            skuTypesCache: MutableMap<String, String>): Pair<String, String> {
             val productId = map["productIdentifier"]!!
             val productType = map["productType"]!!
             skuTypesCache[productId] = productType
@@ -78,6 +78,7 @@ class IAPBridge(reactContext: ReactApplicationContext)
         if (null == sku) {
             result.reject(IllegalArgumentException("SKU $identifier not found"))
         } else {
+            // in fact, only one purchase process can be running at a time, so its not needed
             if(purchaseListeners.containsKey(sku.sku)) {
                 result.reject(IllegalArgumentException("Another purchase is in progress for SKU $identifier"))
                 return
@@ -144,17 +145,18 @@ class IAPBridge(reactContext: ReactApplicationContext)
 
     override fun onPurchaseLoadingFailed(statusCode: Int, description: String) {
         Log.e(TAG, "onPurchaseLoadingFailed: $statusCode $description")
-        if(BillingClient.BillingResponse.ITEM_ALREADY_OWNED == statusCode) {
-            purchaseListeners.forEach{
+        // only one purchase process can be running at a time, so there will be single entry
+        if (BillingClient.BillingResponse.ITEM_ALREADY_OWNED == statusCode) {
+            purchaseListeners.forEach {
                 val purchase = purchasesMap[it.key]
-                if(null != purchase) {
+                if (null != purchase) {
                     acknowledgeIfNeeded(it.value, purchase)
                 } else {
                     it.value.first.reject(statusCode.toString(), description)
                 }
             }
         } else {
-            purchaseListeners.values.forEach{ it.first.reject(statusCode.toString(), description)}
+            purchaseListeners.values.forEach { it.first.reject(statusCode.toString(), description) }
         }
         purchaseListeners.clear()
     }
