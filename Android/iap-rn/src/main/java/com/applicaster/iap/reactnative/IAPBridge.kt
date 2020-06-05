@@ -22,7 +22,8 @@ class IAPBridge(reactContext: ReactApplicationContext)
         GoogleBillingHelper.restorePurchasesForAllTypes()
     }
 
-    private val purchaseListeners: MutableMap<String, Promise> = mutableMapOf()
+    // map SKU been purchased to listened and a flag indicating whether instant acknowledge is needed
+    private val purchaseListeners: MutableMap<String, Pair<Promise, Boolean>> = mutableMapOf()
     private val skuDetailsMap: MutableMap<String, SkuDetails> = mutableMapOf()
     private val purchasesMap: MutableMap<String, Purchase> = mutableMapOf()
 
@@ -45,7 +46,6 @@ class IAPBridge(reactContext: ReactApplicationContext)
     @ReactMethod
     fun purchase(payload: ReadableMap, result: Promise) {
         val identifier = payload.getString("productIdentifier")
-        // todo: finishTransactionAfterPurchase is not used now
         val finishTransactionAfterPurchase = payload.getBoolean("finishing")
         val sku = skuDetailsMap[identifier]
         if (null == sku) {
@@ -55,7 +55,7 @@ class IAPBridge(reactContext: ReactApplicationContext)
                 result.reject(IllegalArgumentException("Another purchase is in progress for SKU $identifier"))
                 return
             }
-            this.purchaseListeners[sku.sku] = result
+            this.purchaseListeners[sku.sku] = Pair(result, finishTransactionAfterPurchase)
             GoogleBillingHelper.purchase(reactApplicationContext.currentActivity!!, sku)
         }
     }
@@ -75,9 +75,21 @@ class IAPBridge(reactContext: ReactApplicationContext)
     fun finishPurchasedTransaction(transaction: ReadableMap, result: Promise) {
         val identifier = transaction.getString("productIdentifier")!!
         val transactionIdentifier = transaction.getString("transactionIdentifier")!!
+        acknowledge(identifier, transactionIdentifier, result)
+    }
+
+    private fun acknowledgeIfNeeded(it: Pair<Promise, Boolean>, p: Purchase) {
+        if (!it.second) {
+            it.first.resolve(wrap(p))
+        } else {
+            acknowledge(p.sku, p.purchaseToken, it.first)
+        }
+    }
+
+    private fun acknowledge(identifier: String, transactionIdentifier: String, result: Promise) {
         val skuDetails = skuDetailsMap[identifier]
-        if(null != skuDetails){
-            if(BillingClient.SkuType.INAPP == skuDetails.type) {
+        if (null != skuDetails) {
+            if (BillingClient.SkuType.INAPP == skuDetails.type) {
                 GoogleBillingHelper.consume(transactionIdentifier, ConsumePromiseListener(result))
             }
         } else {
@@ -88,9 +100,11 @@ class IAPBridge(reactContext: ReactApplicationContext)
     }
 
     override fun onPurchaseLoaded(purchases: List<Purchase>) {
-        purchases.forEach {
-            purchasesMap[it.sku] = it
-            purchaseListeners.remove(it.sku)?.resolve(wrap(it))
+        purchases.forEach {p ->
+            purchasesMap[p.sku] = p
+            purchaseListeners.remove(p.sku)?.let {
+                acknowledgeIfNeeded(it, p)
+            }
         }
     }
 
@@ -100,13 +114,13 @@ class IAPBridge(reactContext: ReactApplicationContext)
             purchaseListeners.forEach{
                 val purchase = purchasesMap.get(it.key)
                 if(null != purchase) {
-                    it.value.resolve(wrap(purchase))
+                    acknowledgeIfNeeded(it.value, purchase)
                 } else {
-                    it.value.reject(statusCode.toString(), description)
+                    it.value.first.reject(statusCode.toString(), description)
                 }
             }
         } else {
-            purchaseListeners.values.forEach{ it.reject(statusCode.toString(), description)}
+            purchaseListeners.values.forEach{ it.first.reject(statusCode.toString(), description)}
         }
         purchaseListeners.clear()
     }
@@ -136,7 +150,7 @@ class IAPBridge(reactContext: ReactApplicationContext)
 
     override fun onBillingClientError(statusCode: Int, description: String) {
         Log.e(TAG, "onBillingClientError: $statusCode $description")
-        purchaseListeners.values.forEach{ it.reject(statusCode.toString(), description)}
+        purchaseListeners.values.forEach{ it.first.reject(statusCode.toString(), description)}
         purchaseListeners.clear()
     }
 
