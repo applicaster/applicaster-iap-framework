@@ -26,7 +26,7 @@ interface BillingListener {
      * @param statusCode An error status code of purchase response [com.android.billingclient.api.BillingClient.BillingResponse]
      * @param description A detailed error description
      */
-    fun onPurchaseLoadingFailed(@BillingClient.BillingResponse statusCode: Int, description: String)
+    fun onPurchaseLoadingFailed(@BillingClient.BillingResponseCode statusCode: Int, description: String)
 
     /**
      * Implement this function to get restored purchases.
@@ -50,7 +50,7 @@ interface BillingListener {
      * @param statusCode An error status code of purchase response [com.android.billingclient.api.BillingClient.BillingResponse]
      * @param description A detailed error description
      */
-    fun onSkuDetailsLoadingFailed(@BillingClient.BillingResponse statusCode: Int, description: String)
+    fun onSkuDetailsLoadingFailed(@BillingClient.BillingResponseCode statusCode: Int, description: String)
 
     /**
      * Implement this function to get purchase token of purchased item.
@@ -66,7 +66,7 @@ interface BillingListener {
      * @param statusCode An error status code of purchase response [com.android.billingclient.api.BillingClient.BillingResponse]
      * @param description A detailed error description
      */
-    fun onPurchaseConsumptionFailed(@BillingClient.BillingResponse statusCode: Int, description: String)
+    fun onPurchaseConsumptionFailed(@BillingClient.BillingResponseCode statusCode: Int, description: String)
 
     /**
      * Implement this function to obtain error status code and error description if BillingClient sent
@@ -75,5 +75,9 @@ interface BillingListener {
      * @param statusCode An error status code of purchase response [com.android.billingclient.api.BillingClient.BillingResponse]
      * @param description A detailed error description
      */
-    fun onBillingClientError(@BillingClient.BillingResponse statusCode: Int, description: String)
+    fun onBillingClientError(@BillingClient.BillingResponseCode statusCode: Int, description: String)
+
+    fun onPurchaseAcknowledgeFailed(statusCode: Int, description: String)
+
+    fun onPurchaseAcknowledged()
 }

@@ -39,6 +39,7 @@ object GoogleBillingHelper : BillingHelper {
         billingListener = callback
 
         val billingClientBuilder = with(BillingClient.newBuilder(applicationContext)) {
+            enablePendingPurchases()
             // set PurchaseUpdatedListener to BillingClient.Builder
             setListener { responseCode, purchases ->
                 updatePurchases(responseCode, purchases)
@@ -114,6 +115,10 @@ object GoogleBillingHelper : BillingHelper {
         executeFlow { consumeAsync(purchaseToken, callback) }
     }
 
+    override fun acknowledge(purchaseToken: String, callback: BillingListener?) {
+        executeFlow { acknowledgeAsync(purchaseToken, callback) }
+    }
+
     override fun validatePurchases(appPublicKey: String, purchases: List<Purchase>) {
         // we should check app public key if it's not empty and return empty list if it does
         if (appPublicKey.isEmpty()) {
@@ -145,15 +150,15 @@ object GoogleBillingHelper : BillingHelper {
     }
 
     //update handle response code and update purchases if ResponseCode.OK
-    private fun updatePurchases(@BillingClient.BillingResponse responseCode: Int, purchases: List<Purchase>?) {
-        when (responseCode) {
-            BillingClient.BillingResponse.OK -> {
+    private fun updatePurchases(billingResult: BillingResult, purchases: List<Purchase>?) {
+        when (billingResult.responseCode) {
+            BillingClient.BillingResponseCode.OK -> {
                 billingListener.onPurchaseLoaded(purchases ?: arrayListOf())
             }
             else -> {
                 billingListener.onPurchaseLoadingFailed(
-                    responseCode,
-                    handleErrorResult(responseCode)
+                        billingResult.responseCode,
+                        handleErrorResult(billingResult.responseCode)
                 )
             }
         }
@@ -167,28 +172,28 @@ object GoogleBillingHelper : BillingHelper {
                 Log.w(TAG, "Billing service disconnected")
                 connectionStatus = ConnectionStatus.DISCONNECTED
                 billingListener.onBillingClientError(
-                    BillingClient.BillingResponse.SERVICE_DISCONNECTED,
+                    BillingClient.BillingResponseCode.SERVICE_DISCONNECTED,
                     BLLING_SERVICE_CONNECTION_WAS_LOST
                 )
                 callback?.onBillingClientError(
-                        BillingClient.BillingResponse.SERVICE_DISCONNECTED,
+                        BillingClient.BillingResponseCode.SERVICE_DISCONNECTED,
                         BLLING_SERVICE_CONNECTION_WAS_LOST
                 )
             }
 
-            override fun onBillingSetupFinished(@BillingClient.BillingResponse responseCode: Int) {
+            override fun onBillingSetupFinished(billingResult: BillingResult) {
                 Log.i(TAG, "Billing setup finished")
 
-                when (responseCode) {
-                    BillingClient.BillingResponse.OK -> {
+                when (billingResult.responseCode) {
+                    BillingClient.BillingResponseCode.OK -> {
                         connectionStatus = ConnectionStatus.CONNECTED
                         function()
                     }
                     else -> {
                         connectionStatus = ConnectionStatus.DISCONNECTED
-                        billingListener.onBillingClientError(responseCode, handleErrorResult(responseCode))
+                        billingListener.onBillingClientError(billingResult.responseCode, handleErrorResult(billingResult.responseCode))
                         callback?.onBillingClientError(
-                                BillingClient.BillingResponse.SERVICE_DISCONNECTED,
+                                BillingClient.BillingResponseCode.SERVICE_DISCONNECTED,
                                 BLLING_SERVICE_CONNECTION_WAS_LOST
                         )
                     }
@@ -211,9 +216,9 @@ object GoogleBillingHelper : BillingHelper {
                 .setSkusList(skusList)
                 .build()
 
-        billingClient.querySkuDetailsAsync(skuDetailsParams) { responseCode, skuDetailsList ->
-            when (responseCode) {
-                BillingClient.BillingResponse.OK -> {
+        billingClient.querySkuDetailsAsync(skuDetailsParams) { billingResult, skuDetailsList ->
+            when (billingResult.responseCode) {
+                BillingClient.BillingResponseCode.OK -> {
                     //call callback function with result depends on billing flow state
                     if (isMultitypeQueryInProgress) {
                         // save obtained items to the cache and set billing flow to finished(isMultitypeQueryInProgress = true)
@@ -228,8 +233,8 @@ object GoogleBillingHelper : BillingHelper {
                 else -> {
                     isMultitypeQueryInProgress = false
                     cachedSkuDetails.clear()
-                    billingListener.onSkuDetailsLoadingFailed(responseCode, handleErrorResult(responseCode))
-                    callback?.onSkuDetailsLoadingFailed(responseCode, handleErrorResult(responseCode))
+                    billingListener.onSkuDetailsLoadingFailed(billingResult.responseCode, handleErrorResult(billingResult.responseCode))
+                    callback?.onSkuDetailsLoadingFailed(billingResult.responseCode, handleErrorResult(billingResult.responseCode))
                 }
             }
         }
@@ -244,69 +249,96 @@ object GoogleBillingHelper : BillingHelper {
     }
 
     private fun consumeAsync(purchaseToken: String, callback: BillingListener?) {
-        billingClient.consumeAsync(purchaseToken) { responseCode, outToken ->
-            when (responseCode) {
-                BillingClient.BillingResponse.OK -> {
+        val consumeParams = ConsumeParams.newBuilder()
+                .setPurchaseToken(purchaseToken)
+                .build()
+        billingClient.consumeAsync(consumeParams) { billingResult, outToken ->
+            when (billingResult.responseCode) {
+                BillingClient.BillingResponseCode.OK -> {
                     billingListener.onPurchaseConsumed(outToken)
                     callback?.onPurchaseConsumed(outToken)
                 }
                 else -> {
                     billingListener.onPurchaseConsumptionFailed(
-                            responseCode,
-                            handleErrorResult(responseCode)
+                            billingResult.responseCode,
+                            handleErrorResult(billingResult.responseCode)
                     )
                     callback?.onPurchaseConsumptionFailed(
-                            responseCode,
-                            handleErrorResult(responseCode)
+                            billingResult.responseCode,
+                            handleErrorResult(billingResult.responseCode)
                     )
                 }
             }
         }
     }
 
-    private fun handleErrorResult(@BillingClient.BillingResponse responseCode: Int): String {
+    private fun acknowledgeAsync(purchaseToken: String, callback: BillingListener?) {
+        val acknowledgePurchase = AcknowledgePurchaseParams.newBuilder()
+                .setPurchaseToken(purchaseToken)
+                .build()
+        billingClient.acknowledgePurchase(acknowledgePurchase) { billingResult->
+            when (billingResult.responseCode) {
+                BillingClient.BillingResponseCode.OK -> {
+                    billingListener.onPurchaseAcknowledged()
+                    callback?.onPurchaseAcknowledged()
+                }
+                else -> {
+                    billingListener.onPurchaseAcknowledgeFailed(
+                            billingResult.responseCode,
+                            handleErrorResult(billingResult.responseCode)
+                    )
+                    callback?.onPurchaseAcknowledgeFailed(
+                            billingResult.responseCode,
+                            handleErrorResult(billingResult.responseCode)
+                    )
+                }
+            }
+        }
+    }
+
+    private fun handleErrorResult(@BillingClient.BillingResponseCode responseCode: Int): String {
         return when (responseCode) {
-            BillingClient.BillingResponse.USER_CANCELED -> {
+            BillingClient.BillingResponseCode.USER_CANCELED -> {
                 Log.w(TAG, USER_CANCELED_DESC)
                 USER_CANCELED_DESC
             }
-            BillingClient.BillingResponse.BILLING_UNAVAILABLE -> {
+            BillingClient.BillingResponseCode.BILLING_UNAVAILABLE -> {
                 Log.e(TAG, BILLING_UNAVAILABLE_DESC)
                 BILLING_UNAVAILABLE_DESC
             }
-            BillingClient.BillingResponse.DEVELOPER_ERROR -> {
+            BillingClient.BillingResponseCode.DEVELOPER_ERROR -> {
                 Log.e(TAG, DEVELOPER_ERROR_DESC)
                 DEVELOPER_ERROR_DESC
             }
-            BillingClient.BillingResponse.ERROR -> {
+            BillingClient.BillingResponseCode.ERROR -> {
                 Log.e(TAG, ERROR_DESC)
                 ERROR_DESC
             }
-            BillingClient.BillingResponse.FEATURE_NOT_SUPPORTED -> {
+            BillingClient.BillingResponseCode.FEATURE_NOT_SUPPORTED -> {
                 Log.e(TAG, FEATURE_NOT_SUPPORTED_DESC)
                 FEATURE_NOT_SUPPORTED_DESC
             }
-            BillingClient.BillingResponse.ITEM_ALREADY_OWNED -> {
+            BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED -> {
                 Log.w(TAG, ITEM_ALREADY_OWNED_DESC)
                 ITEM_ALREADY_OWNED_DESC
             }
-            BillingClient.BillingResponse.ITEM_NOT_OWNED -> {
+            BillingClient.BillingResponseCode.ITEM_NOT_OWNED -> {
                 Log.w(TAG, ITEM_NOT_OWNED_DESC)
                 ITEM_NOT_OWNED_DESC
             }
-            BillingClient.BillingResponse.ITEM_UNAVAILABLE -> {
+            BillingClient.BillingResponseCode.ITEM_UNAVAILABLE -> {
                 Log.w(TAG, ITEM_UNAVAILABLE_DESC)
                 ITEM_UNAVAILABLE_DESC
             }
-            BillingClient.BillingResponse.SERVICE_DISCONNECTED -> {
+            BillingClient.BillingResponseCode.SERVICE_DISCONNECTED -> {
                 Log.e(TAG, SERVICE_DISCONNECTED_DESC)
                 SERVICE_DISCONNECTED_DESC
             }
-            BillingClient.BillingResponse.SERVICE_TIMEOUT -> {
+            BillingClient.BillingResponseCode.SERVICE_TIMEOUT -> {
                 Log.e(TAG, SERVICE_TIMEOUT_DESC)
                 SERVICE_TIMEOUT_DESC
             }
-            BillingClient.BillingResponse.SERVICE_UNAVAILABLE -> {
+            BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE -> {
                 Log.e(TAG, SERVICE_UNAVAILABLE_DESC)
                 SERVICE_UNAVAILABLE_DESC
             }

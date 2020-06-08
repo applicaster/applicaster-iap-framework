@@ -79,4 +79,6 @@ interface BillingHelper {
      * @param purchases List of purchases
      */
     fun validatePurchases(appPublicKey: String, purchases: List<Purchase>)
+
+    fun acknowledge(purchaseToken: String, callback: BillingListener?)
 }

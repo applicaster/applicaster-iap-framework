@@ -115,14 +115,13 @@ class IAPBridge(reactContext: ReactApplicationContext)
         if (BillingClient.SkuType.INAPP == skuDetails.type) {
             when (skuTypes[identifier]) {
                 subscription -> result.reject(RuntimeException("InApp acknowledge flow triggered for subscription"))
-                nonConsumable -> result.resolve(transactionIdentifier) // not needed at this billing lib API version
+                nonConsumable -> GoogleBillingHelper.acknowledge(transactionIdentifier, AcknowledgePromiseListener(result)) // not needed at this billing lib API version
                 consumable -> GoogleBillingHelper.consume(transactionIdentifier, ConsumePromiseListener(result))
                 null -> result.reject(IllegalArgumentException("SKU type details for $identifier is not loaded $transactionIdentifier"))
                 else -> result.reject(IllegalArgumentException("SKU type ${skuTypes[identifier]} not handled in acknowledge $transactionIdentifier"))
             }
         } else if (BillingClient.SkuType.SUBS == skuDetails.type) {
-            // not needed at this billing lib API version
-            result.resolve(transactionIdentifier)
+            GoogleBillingHelper.acknowledge(transactionIdentifier, AcknowledgePromiseListener(result))
         }
     }
 
@@ -146,7 +145,7 @@ class IAPBridge(reactContext: ReactApplicationContext)
     override fun onPurchaseLoadingFailed(statusCode: Int, description: String) {
         Log.e(TAG, "onPurchaseLoadingFailed: $statusCode $description")
         // only one purchase process can be running at a time, so there will be single entry
-        if (BillingClient.BillingResponse.ITEM_ALREADY_OWNED == statusCode) {
+        if (BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED == statusCode) {
             purchaseListeners.forEach {
                 val purchase = purchasesMap[it.key]
                 if (null != purchase) {
@@ -180,6 +179,9 @@ class IAPBridge(reactContext: ReactApplicationContext)
     override fun onPurchaseConsumed(purchaseToken: String) {
     }
 
+    override fun onPurchaseAcknowledged() {
+    }
+
     override fun onPurchaseConsumptionFailed(statusCode: Int, description: String) {
         Log.e(TAG, "onPurchaseConsumptionFailed: $statusCode $description")
     }
@@ -188,6 +190,10 @@ class IAPBridge(reactContext: ReactApplicationContext)
         Log.e(TAG, "onBillingClientError: $statusCode $description")
         purchaseListeners.values.forEach{ it.first.reject(statusCode.toString(), description)}
         purchaseListeners.clear()
+    }
+
+    override fun onPurchaseAcknowledgeFailed(statusCode: Int, description: String) {
+        Log.e(TAG, "onPurchaseAcknowledgeFailed: $statusCode $description")
     }
 
 }

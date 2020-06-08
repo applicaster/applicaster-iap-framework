@@ -19,6 +19,9 @@ abstract class PromiseListener(protected val promise: Promise) : BillingListener
     override fun onPurchaseConsumed(purchaseToken: String) {
     }
 
+    override fun onPurchaseAcknowledged() {
+    }
+
     override fun onPurchaseLoadingFailed(statusCode: Int, description: String) {
         promise.reject(statusCode.toString(), description)
     }
@@ -32,6 +35,10 @@ abstract class PromiseListener(protected val promise: Promise) : BillingListener
     }
 
     override fun onBillingClientError(statusCode: Int, description: String) {
+        promise.reject(statusCode.toString(), description)
+    }
+
+    override fun onPurchaseAcknowledgeFailed(statusCode: Int, description: String) {
         promise.reject(statusCode.toString(), description)
     }
 }
