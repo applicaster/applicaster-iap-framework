@@ -115,7 +115,7 @@ class IAPBridge(reactContext: ReactApplicationContext)
         if (BillingClient.SkuType.INAPP == skuDetails.type) {
             when (skuTypes[identifier]) {
                 subscription -> result.reject(RuntimeException("InApp acknowledge flow triggered for subscription"))
-                nonConsumable -> GoogleBillingHelper.acknowledge(transactionIdentifier, AcknowledgePromiseListener(result)) // not needed at this billing lib API version
+                nonConsumable -> GoogleBillingHelper.acknowledge(transactionIdentifier, AcknowledgePromiseListener(result))
                 consumable -> GoogleBillingHelper.consume(transactionIdentifier, ConsumePromiseListener(result))
                 null -> result.reject(IllegalArgumentException("SKU type details for $identifier is not loaded $transactionIdentifier"))
                 else -> result.reject(IllegalArgumentException("SKU type ${skuTypes[identifier]} not handled in acknowledge $transactionIdentifier"))
