@@ -1,6 +1,9 @@
 import Foundation
+import os.log
 import React
 import StoreKit
+
+let model_log = OSLog(subsystem: "com.applicaster.purchase.test", category: "Purchase")
 
 @objc(ApplicasterIAPBridge)
 class ApplicasterIAPBridge: NSObject, RCTBridgeModule {
@@ -67,6 +70,7 @@ class ApplicasterIAPBridge: NSObject, RCTBridgeModule {
             switch result {
             case let .success(purchase):
                 let purchaseDict = purchase.toDictionary()
+                os_log("Receipt: [%@], item: [%@] )", log: model_log, type: .info, Utils.receiptInBase64String()!, purchase.item.productIdentifier)
 
                 resolver([
                     ReacеNativePurchaseResponseKeys.receipt: Utils.receiptInBase64String() as Any,
