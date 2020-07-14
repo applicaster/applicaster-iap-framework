@@ -94,7 +94,10 @@ class ApplicasterIAPBridge: NSObject, RCTBridgeModule {
             switch result {
             case let .success(transactions):
                 let purchasedItemIDs = transactions.map({ $0.payment.productIdentifier })
-                resolver(purchasedItemIDs)
+                resolver([
+                    ReacеNativeRestorePurchasesKeys.receipt: Utils.receiptInBase64String() as Any,
+                    ReacеNativeRestorePurchasesKeys.restoreProductsIDs: purchasedItemIDs,
+                ])
             case let .failure(error):
                 rejecter(ApplicasterIAPBridgeErrors.generalError,
                          error.localizedDescription,

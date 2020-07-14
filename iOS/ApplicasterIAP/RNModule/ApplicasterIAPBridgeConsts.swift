@@ -37,3 +37,8 @@ struct ReacеNativePurchaseResponseKeys {
     static let payload = "payload"
     static let appleInfo = "appleInfo"
 }
+
+struct ReacеNativeRestorePurchasesKeys {
+    static let receipt = "receipt"
+    static let restoreProductsIDs = "restoredProducts"
+}
