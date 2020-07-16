@@ -44,12 +44,14 @@ class IAPBridge(reactContext: ReactApplicationContext)
 
     // map SKU been purchased to listened and a flag indicating whether instant acknowledge is needed
     private val purchaseListeners: MutableMap<String, Pair<Promise, Boolean>> = mutableMapOf()
+    private var currentPurchaseListener: Promise? = null
 
     // lookup map to SkuDetails
     private val skuDetailsMap: MutableMap<String, SkuDetails> = mutableMapOf()
 
     // map of purchases owned
     private val purchasesMap: MutableMap<String, Purchase> = mutableMapOf()
+    private var currentPurchaseForAcknowledge: Purchase? = null
 
     // cache for initial purchase type since Google billing does not distinguish consumables and non-consumables
     private val skuTypes: MutableMap<String, String> = mutableMapOf()
@@ -115,13 +117,13 @@ class IAPBridge(reactContext: ReactApplicationContext)
         if (BillingClient.SkuType.INAPP == skuDetails.type) {
             when (skuTypes[identifier]) {
                 subscription -> result.reject(RuntimeException("InApp acknowledge flow triggered for subscription"))
-                nonConsumable -> GoogleBillingHelper.acknowledge(transactionIdentifier, AcknowledgePromiseListener(result))
+                nonConsumable -> GoogleBillingHelper.acknowledge(transactionIdentifier, null)
                 consumable -> GoogleBillingHelper.consume(transactionIdentifier, ConsumePromiseListener(result))
                 null -> result.reject(IllegalArgumentException("SKU type details for $identifier is not loaded $transactionIdentifier"))
                 else -> result.reject(IllegalArgumentException("SKU type ${skuTypes[identifier]} not handled in acknowledge $transactionIdentifier"))
             }
         } else if (BillingClient.SkuType.SUBS == skuDetails.type) {
-            GoogleBillingHelper.acknowledge(transactionIdentifier, AcknowledgePromiseListener(result))
+            GoogleBillingHelper.acknowledge(transactionIdentifier, null)
         }
     }
 
@@ -129,15 +131,17 @@ class IAPBridge(reactContext: ReactApplicationContext)
         if (!it.second) {
             it.first.resolve(wrap(p))
         } else {
+            currentPurchaseListener = it.first
+            currentPurchaseForAcknowledge = p
             acknowledge(p.sku, p.purchaseToken, it.first)
         }
     }
 
     override fun onPurchaseLoaded(purchases: List<Purchase>) {
-        purchases.forEach {p ->
-            purchasesMap[p.sku] = p
-            purchaseListeners.remove(p.sku)?.let {
-                acknowledgeIfNeeded(it, p)
+        purchases.forEach { purchase ->
+            purchasesMap[purchase.sku] = purchase
+            purchaseListeners.remove(purchase.sku)?.let {
+                acknowledgeIfNeeded(it, purchase)
             }
         }
     }
@@ -177,9 +181,16 @@ class IAPBridge(reactContext: ReactApplicationContext)
     }
 
     override fun onPurchaseConsumed(purchaseToken: String) {
+        Log.i(TAG, "Purchase was consumed")
     }
 
     override fun onPurchaseAcknowledged() {
+        currentPurchaseListener?.let { promise ->
+            currentPurchaseForAcknowledge?.let { promise.resolve(wrap(it)) }
+        }
+        currentPurchaseListener = null
+        currentPurchaseForAcknowledge = null
+        Log.i(TAG, "The purchase was acknowledged")
     }
 
     override fun onPurchaseConsumptionFailed(statusCode: Int, description: String) {

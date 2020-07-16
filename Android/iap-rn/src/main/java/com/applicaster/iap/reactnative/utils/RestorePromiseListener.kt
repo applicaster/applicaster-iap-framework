@@ -6,13 +6,15 @@ import com.facebook.react.bridge.Promise
 class RestorePromiseListener(promise: Promise) : PromiseListener(promise) {
 
     override fun onPurchaseLoaded(purchases: List<Purchase>) {
-        val purchasedItemIDs = purchases.map { it.sku }
-        promise.resolve(purchasedItemIDs)
+        val purchasesArray = WritableNativeArray()
+        purchases.forEach { purchasesArray.pushMap(wrap(it)) }
+        promise.resolve(purchasesArray)
     }
 
     override fun onPurchasesRestored(purchases: List<Purchase>) {
-        val purchasedItemIDs = purchases.map { it.sku }
-        promise.resolve(purchasedItemIDs)
+        val purchasedItemIDsArray = WritableNativeArray()
+        purchases.forEach { purchasedItemIDsArray.pushMap(wrap(it)) }
+        promise.resolve(purchasedItemIDsArray)
     }
 
 }
