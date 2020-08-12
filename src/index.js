@@ -10,23 +10,24 @@ const { ApplicasterIAPBridge = defaultIAP } = NativeModules;
 
 export const ApplicasterIAPModule = {
   /**
-   * Retrieve product fro identifiers
-   * @param {Array} identifiers Dictionary with user data
+   * Retrieve product for payload
+   * @param {Array} payload Array of products data
    */
-  async products(identifiers) {
+  async products(payload) {
     try {
-      return ApplicasterIAPBridge.products(identifiers);
+      return ApplicasterIAPBridge.products(payload);
     } catch (e) {
       throw e;
     }
   },
+
   /**
    * Purchase item
-   * @param {String} productIdentifier Dictionary with user data
+   * @param {Object} payload Dictionary with user data
    */
-  async purchase(productIdentifier) {
+  async purchase(payload) {
     try {
-      return ApplicasterIAPBridge.purchase(productIdentifier);
+      return ApplicasterIAPBridge.purchase(payload);
     } catch (e) {
       throw e;
     }
@@ -37,6 +38,17 @@ export const ApplicasterIAPModule = {
   async restore() {
     try {
       return ApplicasterIAPBridge.restore();
+    } catch (e) {
+      throw e;
+    }
+  },
+  /**
+   * Finish purchased transaction
+   * @param {Object} payload Dictionary transaction to finalize
+   */
+  async finishPurchasedTransaction(payload) {
+    try {
+      return ApplicasterIAPBridge.finishPurchasedTransaction(payload);
     } catch (e) {
       throw e;
     }

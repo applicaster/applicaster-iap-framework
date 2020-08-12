@@ -55,6 +55,7 @@ class StoreObserver: NSObject, SKPaymentTransactionObserver {
     private func purchased(transaction: SKPaymentTransaction) {
         let identifier = transaction.payment.productIdentifier
         guard let (purchase, completion) = activePurchases[identifier] else {
+            unfinished(transaction: transaction)
             return
         }
         activePurchases.removeValue(forKey: identifier)
@@ -77,6 +78,8 @@ class StoreObserver: NSObject, SKPaymentTransactionObserver {
             unfinished(transaction: transaction)
             return
         }
+        
+        SKPaymentQueue.default().finishTransaction(transaction)
         activePurchases.removeValue(forKey: identifier)
         
         guard let error = transaction.error else {
