@@ -1,1 +1,2 @@
+include ':uniiap'
 include ':sample', ':iap'
