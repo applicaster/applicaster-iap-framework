@@ -1,2 +1,1 @@
-include ':uniiap'
-include ':sample', ':iap'
+include ':iap-uni', ':sample', ':iap'

@@ -7,7 +7,8 @@ import com.applicaster.iap.uni.api.Sku
 import com.facebook.react.bridge.*
 
 // todo: call restore on already owned error
-// todo: revert purchase if not fulfilled
+// todo: revert purchase if not fulfilled by backend
+// todo: skip expired subscriptions from restored
 
 class IAPBridge(reactContext: ReactApplicationContext)
     : ReactContextBaseJavaModule(reactContext) {
