@@ -1,4 +1,3 @@
 package com.applicaster.iap.uni.api
 
-data class PurchaseRequest(var productIdentifier: String,
-                           var finishing: Boolean)
+data class PurchaseRequest(var productIdentifier: String)

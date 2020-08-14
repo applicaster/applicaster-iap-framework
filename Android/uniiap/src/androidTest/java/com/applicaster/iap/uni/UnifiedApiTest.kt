@@ -172,7 +172,7 @@ class UnifiedApiTest {
             purchaseListener.waitForEvent()
             api.purchase(
                 activity,
-                PurchaseRequest(skuDetails.productIdentifier, false),
+                PurchaseRequest(skuDetails.productIdentifier),
                 purchaseListener
             )
         }
