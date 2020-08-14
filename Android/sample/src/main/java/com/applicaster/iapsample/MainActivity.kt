@@ -37,6 +37,10 @@ class MainActivity : AppCompatActivity(), BillingListener {
         tv_result.text = "Error: $description"
     }
 
+    override fun onPurchasesRestored(purchases: List<Purchase>) {
+        TODO("Not yet implemented")
+    }
+
     override fun onSkuDetailsLoaded(skuDetails: List<SkuDetails>) {
         GoogleBillingHelper.purchase(this, skuDetails[0])
     }
@@ -53,5 +57,17 @@ class MainActivity : AppCompatActivity(), BillingListener {
     override fun onPurchaseConsumptionFailed(statusCode: Int, description: String) {
         Log.e(TAG, "status code: $statusCode, description: $description")
         tv_result.text = "Error: $description"
+    }
+
+    override fun onBillingClientError(statusCode: Int, description: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onPurchaseAcknowledgeFailed(statusCode: Int, description: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onPurchaseAcknowledged() {
+        TODO("Not yet implemented")
     }
 }
