@@ -50,10 +50,12 @@ class PlayBillingImpl: IBillingAPI, BillingListener {
         }
     }
 
-    override fun loadSkuDetailsForAllTypes(skus: Map<String, String>, callback: IAPListener?) {
+    override fun loadSkuDetailsForAllTypes(skus: Map<String, IBillingAPI.SkuType>,
+                                           callback: IAPListener?) {
+        val playSKUs = skus.map { Pair(it.key, mapSkuType(it.value)) }.toMap()
         GoogleBillingHelper.loadSkuDetailsForAllTypes(
-            skus,
-            if (null == callback) null else SKUPromiseListener(callback))
+                playSKUs,
+                if (null == callback) null else SKUPromiseListener(callback))
     }
 
     override fun restorePurchases(skuType: IBillingAPI.SkuType, callback: IAPListener?) {

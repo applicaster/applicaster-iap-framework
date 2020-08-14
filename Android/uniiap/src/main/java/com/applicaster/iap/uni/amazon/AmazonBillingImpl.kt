@@ -27,7 +27,7 @@ class AmazonBillingImpl : IBillingAPI, PurchasingListener {
         }
     }
 
-    override fun loadSkuDetailsForAllTypes(skus: Map<String, String>, callback: IAPListener?) {
+    override fun loadSkuDetailsForAllTypes(skus: Map<String, IBillingAPI.SkuType>, callback: IAPListener?) {
         val request = PurchasingService.getProductData(HashSet<String>(skus.keys))
         if (null != callback) {
             skuRequests[request] = callback

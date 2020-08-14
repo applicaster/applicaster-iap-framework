@@ -28,43 +28,43 @@ interface IBillingAPI {
     fun init(applicationContext: Context)
 
     fun loadSkuDetails(
-        skuType: SkuType,
-        skusList: List<String>,
-        callback: IAPListener? = null
+            skuType: SkuType,
+            skusList: List<String>,
+            callback: IAPListener? = null
     )
 
     fun loadSkuDetailsForAllTypes(
-        skus: Map<String, String>,
-        callback: IAPListener? = null
+            skus: Map<String, SkuType>,
+            callback: IAPListener? = null
     )
 
     fun restorePurchases(
-        skuType: SkuType,
-        callback: IAPListener? = null
+            skuType: SkuType,
+            callback: IAPListener? = null
     )
 
     fun restorePurchasesForAllTypes(callback: IAPListener? = null)
 
     fun purchase(
-        activity: Activity,
-        request: PurchaseRequest,
-        callback: IAPListener?
+            activity: Activity,
+            request: PurchaseRequest,
+            callback: IAPListener?
     )
 
     fun consume(purchaseItem: Purchase, callback: IAPListener?)
 
     fun consume(
-        purchaseToken: String,
-        callback: IAPListener? = null
+            purchaseToken: String,
+            callback: IAPListener? = null
     )
 
     fun acknowledge(
-        purchaseToken: String,
-        callback: IAPListener?
+            purchaseToken: String,
+            callback: IAPListener?
     )
 
     companion object {
-        fun create(vendor: Vendor) : IBillingAPI = when(vendor) {
+        fun create(vendor: Vendor): IBillingAPI = when (vendor) {
             Vendor.play -> PlayBillingImpl()
             Vendor.amazon -> AmazonBillingImpl()
         }
