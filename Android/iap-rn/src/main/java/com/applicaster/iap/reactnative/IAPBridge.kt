@@ -9,6 +9,10 @@ import com.applicaster.iap.GoogleBillingHelper
 import com.applicaster.iap.reactnative.utils.*
 import com.facebook.react.bridge.*
 
+
+// todo: restore on already owned
+// todo: reveret purchase if not fulfilled
+
 class IAPBridge(reactContext: ReactApplicationContext)
     : ReactContextBaseJavaModule(reactContext), BillingListener {
 
