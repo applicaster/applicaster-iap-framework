@@ -38,11 +38,13 @@ class AmazonBillingImpl : IBillingAPI, PurchasingListener {
         skuType: IBillingAPI.SkuType,
         callback: IAPListener?
     ) {
+        receipts.clear()
         restoreObserver = callback
         PurchasingService.getPurchaseUpdates(true)
     }
 
     override fun restorePurchasesForAllTypes(callback: IAPListener?) {
+        receipts.clear()
         restoreObserver = callback
         PurchasingService.getPurchaseUpdates(true)
     }
@@ -79,7 +81,7 @@ class AmazonBillingImpl : IBillingAPI, PurchasingListener {
 
         val request = skuRequests.remove(response.requestId)
         if (ProductDataResponse.RequestStatus.SUCCESSFUL != response.requestStatus) {
-            skuRequests.get(response.requestId)?.onSkuDetailsLoadingFailed(
+            skuRequests[response.requestId]?.onSkuDetailsLoadingFailed(
                 IBillingAPI.IAPResult.generalError,
                 response.requestStatus.toString()
             )
@@ -108,6 +110,7 @@ class AmazonBillingImpl : IBillingAPI, PurchasingListener {
             return
         }
         val receipt = response.receipt
+        receipts.add(receipt)
         request?.onPurchased(
             Purchase(
                 receipt.sku,

@@ -117,6 +117,9 @@ class PlayBillingImpl: IBillingAPI, BillingListener {
     }
 
     override fun onPurchasesRestored(purchases: List<com.android.billingclient.api.Purchase>) {
+        purchases.forEach {
+            purchasesMap[it.sku] = it
+        }
     }
 
     override fun onSkuDetailsLoaded(skuDetails: List<SkuDetails>) {
