@@ -122,7 +122,7 @@ class UnifiedApiTest {
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         assertEquals("Need specific package name","com.applicaster.inplayerdemo", appContext.packageName)
 
-        //testApi(IBillingAPI.Vendor.amazon, appContext, IBillingAPI.SkuType.subscription, "72348_17073")
+        testApi(IBillingAPI.Vendor.amazon, appContext, IBillingAPI.SkuType.subscription, "72348_17073")
         testApi(IBillingAPI.Vendor.play, appContext, IBillingAPI.SkuType.subscription,"72348_17073")
     }
 
