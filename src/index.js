@@ -9,6 +9,19 @@ const defaultIAP = {
 const { ApplicasterIAPBridge = defaultIAP } = NativeModules;
 
 export const ApplicasterIAPModule = {
+
+  /**
+   * Initialize bridge with given billing provider
+   * @param {String} vendor: one of 'play' of 'amazon'
+   */
+  async init(vendor) {
+    try {
+      return ApplicasterIAPBridge.init(vendor);
+    } catch (e) {
+      throw e;
+    }
+  },
+
   /**
    * Retrieve product for payload
    * @param {Array} payload Array of products data
