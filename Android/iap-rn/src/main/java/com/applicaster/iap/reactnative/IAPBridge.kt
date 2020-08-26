@@ -50,10 +50,6 @@ class IAPBridge(reactContext: ReactApplicationContext)
         return bridgeName
     }
 
-    init {
-        init(IBillingAPI.Vendor.play.toString())
-    }
-
     @ReactMethod
     fun init(vendor: String) {
         api = IBillingAPI.create(IBillingAPI.Vendor.valueOf(vendor))
