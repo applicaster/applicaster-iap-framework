@@ -50,6 +50,10 @@ class IAPBridge(reactContext: ReactApplicationContext)
         return bridgeName
     }
 
+    init {
+        init(IBillingAPI.Vendor.play.toString())
+    }
+
     @ReactMethod
     fun init(vendor: String) {
         api = IBillingAPI.create(IBillingAPI.Vendor.valueOf(vendor))
@@ -62,7 +66,7 @@ class IAPBridge(reactContext: ReactApplicationContext)
         val productIds = identifiers.toArrayList().map {
             unwrapProductIdentifier(it as HashMap<String, String>, skuTypes)
         }.toMap()
-        api.loadSkuDetailsForAllTypes(productIds, SKUPromiseListener(result))
+        api.loadSkuDetailsForAllTypes(productIds, SKUPromiseListener(result, skuDetailsMap))
     }
 
     /**
@@ -71,7 +75,7 @@ class IAPBridge(reactContext: ReactApplicationContext)
      */
     @ReactMethod
     fun purchase(payload: ReadableMap, result: Promise) {
-        val identifier = payload.getString("productIdentifier")
+        val identifier = payload.getString("productIdentifier")!!
         val finishTransactionAfterPurchase = payload.getBoolean("finishing")
         val sku = skuDetailsMap[identifier]
         if (null == sku) {
@@ -84,7 +88,7 @@ class IAPBridge(reactContext: ReactApplicationContext)
             }
             api.purchase(
                     reactApplicationContext.currentActivity!!,
-                    PurchaseRequest(sku.productIdentifier),
+                    PurchaseRequest(identifier),
                     listener)
         }
     }

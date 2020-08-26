@@ -116,6 +116,8 @@ class PlayBillingImpl: IBillingAPI, BillingListener {
 
     override fun onPurchaseLoadingFailed(statusCode: Int, description: String) {
         Log.e(TAG, "onPurchaseLoadingFailed: $statusCode $description")
+        purchaseListeners.values.forEach{ it.onBillingClientError(Mappers.mapStatus(statusCode), description)}
+        purchaseListeners.clear()
     }
 
     override fun onPurchasesRestored(purchases: List<com.android.billingclient.api.Purchase>) {
