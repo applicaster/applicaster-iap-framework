@@ -110,13 +110,27 @@ class PlayBillingImpl: IBillingAPI, BillingListener {
         purchases.forEach { purchase ->
             purchasesMap[purchase.sku] = purchase
             purchaseListeners.remove(purchase.sku)
-                ?.onPurchased(Purchase(purchase.sku, purchase.orderId, purchase.originalJson))
+                ?.onPurchased(Purchase(purchase.sku, purchase.purchaseToken, purchase.originalJson))
         }
     }
 
     override fun onPurchaseLoadingFailed(statusCode: Int, description: String) {
         Log.e(TAG, "onPurchaseLoadingFailed: $statusCode $description")
-        purchaseListeners.values.forEach{ it.onBillingClientError(Mappers.mapStatus(statusCode), description)}
+        if(BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED == statusCode) {
+            // there will be only single item, I suppose, but just to have generic code
+            purchaseListeners.forEach{
+                val owned = purchasesMap[it.key]
+                if(null != owned) {
+                    it.value.onPurchased(Purchase(owned.sku, owned.purchaseToken, owned.originalJson))
+                } else {
+                    it.value.onPurchaseFailed(Mappers.mapStatus(statusCode), description)
+                }
+            }
+        } else {
+            purchaseListeners.values.forEach {
+                it.onPurchaseFailed(Mappers.mapStatus(statusCode), description)
+            }
+        }
         purchaseListeners.clear()
     }
 
