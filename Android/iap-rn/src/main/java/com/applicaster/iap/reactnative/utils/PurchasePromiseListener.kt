@@ -8,5 +8,4 @@ open class PurchasePromiseListener(promise: Promise) : PromiseListener(promise) 
     override fun onPurchased(purchase: Purchase) {
         promise.resolve(wrap(purchase))
     }
-
 }

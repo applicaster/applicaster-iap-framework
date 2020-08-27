@@ -107,7 +107,7 @@ class IAPBridge(reactContext: ReactApplicationContext)
         acknowledge(identifier, transactionIdentifier, result)
     }
 
-    fun acknowledge(identifier: String, transactionIdentifier: String, result: Promise) {
+    private fun acknowledge(identifier: String, transactionIdentifier: String, result: Promise) {
         val skuDetails = skuTypes[identifier]
         if (null == skuDetails) {
             result.reject(IllegalArgumentException("SKU details are not loaded $transactionIdentifier"))
@@ -118,6 +118,22 @@ class IAPBridge(reactContext: ReactApplicationContext)
         } else if (IBillingAPI.SkuType.subscription == skuDetails ||
                 IBillingAPI.SkuType.nonConsumable == skuDetails) {
             api.acknowledge(transactionIdentifier, AcknowledgePromiseListener(result))
+        }
+    }
+
+    fun acknowledge(identifier: String, transactionIdentifier: String, listener: PromiseListener) {
+        val skuDetails = skuTypes[identifier]
+        if (null == skuDetails) {
+            listener.onPurchaseAcknowledgeFailed(
+                    IBillingAPI.IAPResult.generalError,
+                    "SKU details are not loaded $transactionIdentifier")
+            return
+        }
+        if (IBillingAPI.SkuType.consumable == skuDetails) {
+            api.consume(transactionIdentifier, listener)
+        } else if (IBillingAPI.SkuType.subscription == skuDetails ||
+                IBillingAPI.SkuType.nonConsumable == skuDetails) {
+            api.acknowledge(transactionIdentifier, listener)
         }
     }
 
