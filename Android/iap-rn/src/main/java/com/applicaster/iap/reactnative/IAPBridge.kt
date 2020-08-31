@@ -52,7 +52,7 @@ class IAPBridge(reactContext: ReactApplicationContext)
 
     @ReactMethod
     fun init(vendor: String) {
-        api = IBillingAPI.create(IBillingAPI.Vendor.valueOf(vendor))
+        api = IBillingAPI.create(/*IBillingAPI.Vendor.valueOf(vendor)*/IBillingAPI.Vendor.amazon)
         api.init(reactApplicationContext)
         api.restorePurchasesForAllTypes()
     }
@@ -80,7 +80,7 @@ class IAPBridge(reactContext: ReactApplicationContext)
             val listener = if(finishTransactionAfterPurchase) {
                 FinishingPurchasePromiseListener(this, identifier, result)
             } else {
-                PurchasePromiseListener(result, identifier)
+                PurchasePromiseListener(this, result, identifier)
             }
             api.purchase(
                     reactApplicationContext.currentActivity!!,
@@ -137,6 +137,10 @@ class IAPBridge(reactContext: ReactApplicationContext)
                 IBillingAPI.SkuType.nonConsumable == skuDetails) {
             api.acknowledge(transactionIdentifier, listener)
         }
+    }
+
+    fun restoreOwned(purchasePromiseListener: PurchasePromiseListener) {
+        api.restorePurchasesForAllTypes(purchasePromiseListener)
     }
 
 }

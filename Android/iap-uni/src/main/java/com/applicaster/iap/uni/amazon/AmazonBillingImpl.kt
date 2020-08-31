@@ -99,14 +99,13 @@ class AmazonBillingImpl : IBillingAPI, PurchasingListener {
         val request = purchaseRequests.remove(response.requestId)
         if (PurchaseResponse.RequestStatus.SUCCESSFUL != response.requestStatus) {
             val iapResult =
-                if (PurchaseResponse.RequestStatus.ALREADY_PURCHASED == response.requestStatus)
-                    IBillingAPI.IAPResult.alreadyOwned
-                else
-                    IBillingAPI.IAPResult.generalError
+                    if (PurchaseResponse.RequestStatus.ALREADY_PURCHASED == response.requestStatus) {
+                        IBillingAPI.IAPResult.alreadyOwned
+                    } else
+                        IBillingAPI.IAPResult.generalError
             request?.onPurchaseFailed(
-                iapResult,
-                response.requestStatus.toString()
-            )
+                    iapResult,
+                    response.requestStatus.toString())
             return
         }
         val receipt = response.receipt

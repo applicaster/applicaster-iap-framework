@@ -18,7 +18,7 @@ class PlayBillingImpl: IBillingAPI, BillingListener {
         const val TAG = "PlayBilling"
     }
 
-    private val purchasesMap: MutableMap<String, com.android.billingclient.api.Purchase> = hashMapOf()
+    //private val purchasesMap: MutableMap<String, com.android.billingclient.api.Purchase> = hashMapOf()
     private val purchaseListeners: MutableMap<String, IAPListener> = hashMapOf()
 
     // sku details cache
@@ -108,7 +108,6 @@ class PlayBillingImpl: IBillingAPI, BillingListener {
     override fun onPurchaseLoaded(purchases: List<com.android.billingclient.api.Purchase>) {
         // the only listener that can't be passed as callback to the billing library
         purchases.forEach { purchase ->
-            purchasesMap[purchase.sku] = purchase
             purchaseListeners.remove(purchase.sku)
                 ?.onPurchased(Purchase(purchase.sku, purchase.purchaseToken, purchase.originalJson))
         }
@@ -119,12 +118,7 @@ class PlayBillingImpl: IBillingAPI, BillingListener {
         if(BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED == statusCode) {
             // there will be only single item, I suppose, but just to have generic code
             purchaseListeners.forEach{
-                val owned = purchasesMap[it.key]
-                if(null != owned) {
-                    it.value.onPurchased(Purchase(owned.sku, owned.purchaseToken, owned.originalJson))
-                } else {
-                    it.value.onPurchaseFailed(Mappers.mapStatus(statusCode), description)
-                }
+                it.value.onPurchaseFailed(Mappers.mapStatus(statusCode), description)
             }
         } else {
             purchaseListeners.values.forEach {
@@ -135,9 +129,6 @@ class PlayBillingImpl: IBillingAPI, BillingListener {
     }
 
     override fun onPurchasesRestored(purchases: List<com.android.billingclient.api.Purchase>) {
-        purchases.forEach {
-            purchasesMap[it.sku] = it
-        }
     }
 
     override fun onSkuDetailsLoaded(skuDetails: List<SkuDetails>) {
