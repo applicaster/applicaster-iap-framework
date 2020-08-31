@@ -78,9 +78,9 @@ class IAPBridge(reactContext: ReactApplicationContext)
             result.reject(IllegalArgumentException("SKU $identifier not found"))
         } else {
             val listener = if(finishTransactionAfterPurchase) {
-                FinishingPurchasePromiseListener(this, result)
+                FinishingPurchasePromiseListener(this, identifier, result)
             } else {
-                PurchasePromiseListener(result)
+                PurchasePromiseListener(result, identifier)
             }
             api.purchase(
                     reactApplicationContext.currentActivity!!,
@@ -121,7 +121,9 @@ class IAPBridge(reactContext: ReactApplicationContext)
         }
     }
 
-    fun acknowledge(identifier: String, transactionIdentifier: String, listener: PromiseListener) {
+    fun acknowledge(identifier: String,
+                    transactionIdentifier: String,
+                    listener: PromiseListener) {
         val skuDetails = skuTypes[identifier]
         if (null == skuDetails) {
             listener.onPurchaseAcknowledgeFailed(

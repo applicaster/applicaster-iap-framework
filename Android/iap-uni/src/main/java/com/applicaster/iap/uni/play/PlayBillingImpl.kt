@@ -82,7 +82,7 @@ class PlayBillingImpl: IBillingAPI, BillingListener {
             if(null != callback) {
                 this.purchaseListeners[sku.sku] = callback
             }
-            GoogleBillingHelper.purchase(activity, skuDetails[request.productIdentifier]!!)
+            GoogleBillingHelper.purchase(activity, sku)
         }
     }
 
