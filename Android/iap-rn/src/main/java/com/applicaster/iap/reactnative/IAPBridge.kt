@@ -52,7 +52,7 @@ class IAPBridge(reactContext: ReactApplicationContext)
 
     @ReactMethod
     fun init(vendor: String) {
-        api = IBillingAPI.create(/*IBillingAPI.Vendor.valueOf(vendor)*/IBillingAPI.Vendor.amazon)
+        api = IBillingAPI.create(IBillingAPI.Vendor.valueOf(vendor))
         api.init(reactApplicationContext)
         api.restorePurchasesForAllTypes()
     }
