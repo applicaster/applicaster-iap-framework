@@ -72,13 +72,10 @@ class StoreObserver: NSObject, SKPaymentTransactionObserver {
 
     private func failed(transaction: SKPaymentTransaction) {
         let identifier = transaction.payment.productIdentifier
-        guard let (_, completion) = activePurchases[identifier] else {
-            unfinished(transaction: transaction)
-            return
-        }
-
-        guard let error = transaction.error,
+        guard let (_, completion) = activePurchases[identifier],
+              let error = transaction.error,
               shouldSkipFailedTransaction(forError: error) == false else {
+            unfinished(transaction: transaction)
             return
         }
 
@@ -92,8 +89,8 @@ class StoreObserver: NSObject, SKPaymentTransactionObserver {
 
     private func shouldSkipFailedTransaction(forError error: Error) -> Bool {
         struct ErrorCodes {
-            static let code3038 = 3038 //Apple Media Services Terms and Conditions have changed. https://developer.apple.com/forums/thread/665933
-            static let code2024 = 2024 //Verification Required https://developer.apple.com/forums/thread/651407
+            static let code3038 = 3038 // Apple Media Services Terms and Conditions have changed. https://developer.apple.com/forums/thread/665933
+            static let code2024 = 2024 // Verification Required https://developer.apple.com/forums/thread/651407
         }
 
         let containsErrorCodes = [
