@@ -73,13 +73,14 @@ class StoreObserver: NSObject, SKPaymentTransactionObserver {
     private func failed(transaction: SKPaymentTransaction) {
         let identifier = transaction.payment.productIdentifier
         guard let (_, completion) = activePurchases[identifier],
-              let error = transaction.error,
-              shouldSkipFailedTransaction(forError: error) == false else {
+              let error = transaction.error else {
             unfinished(transaction: transaction)
             return
         }
 
-        activePurchases.removeValue(forKey: identifier)
+        if shouldSkipFailedTransaction(forError: error) == false {
+            activePurchases.removeValue(forKey: identifier)
+        }
 
         let result = PurchaseResult.failure(error)
         DispatchQueue.main.async {
@@ -95,7 +96,7 @@ class StoreObserver: NSObject, SKPaymentTransactionObserver {
 
         let containsErrorCodes = [
             ErrorCodes.code3038,
-            ErrorCodes.code2024
+            ErrorCodes.code2024,
         ]
 
         let userInfo = (error as NSError).userInfo
@@ -103,7 +104,7 @@ class StoreObserver: NSObject, SKPaymentTransactionObserver {
             return false
         }
 
-        let foundErrorCodes = containsErrorCodes.map { underlyingError.code == $0 }
+        let foundErrorCodes = containsErrorCodes.filter { underlyingError.code == $0 }
         return foundErrorCodes.count > 0
     }
 
